@@ -1,8 +1,55 @@
 <html>
     <head>
+        <!-- js -->
+        <script src="js/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/esm/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script> 
+        <script src="js/popup.js"></script>
+   
+        <!-- css -->
+        <link href="css/bootstrap.min.css" rel="stylesheet"> 
     </head>
 
+
     <body>
-        SkyX Rocks
+        <table width="400px" cellpadding="10">
+            <tr>
+                <td align="center" colspan="2">
+                    <u>SkyX V2</u>
+                </td>
+            </tr>
+
+            <!-- Plugins List using bootstrap expandables -->
+            <tr>
+                <td>
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Test Item
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                            Test Item is a neat plugin that allows users to have more fun while playing GeoFS
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td align="center">
+                    <button id="addPluginButton">Add A Plugin</button>
+                </td>
+                <td align="right">
+                    <input type="text" id="pluginUrlInput">
+                </td>
+            </tr>
+        </table>
     </body>
 </html>
