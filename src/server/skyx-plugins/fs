@@ -1,0 +1,3 @@
+<?php
+
+$fs = "gs://skyx_files";

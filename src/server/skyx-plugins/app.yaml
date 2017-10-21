@@ -1,0 +1,22 @@
+application: skyx-plugins
+version: 1
+runtime: php55
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /login_back.php*
+  script: login_back.php
+
+- url: /*
+  script: index.php
+
+- url: /index.php*
+  script: index.php
+
+- url: .*
+  script: 404.php
