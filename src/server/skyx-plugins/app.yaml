@@ -6,17 +6,23 @@ threadsafe: yes
 
 handlers:
 - url: /favicon\.ico
-  static_files: favicon.ico
-  upload: favicon\.ico
+  static_files: img/favicon.ico
+  upload: img/favicon\.ico
 
 - url: /login_back.php*
-  script: login_back.php
+  script: php/login_back.php
 
 - url: /*
-  script: index.php
+  script: php/index.php
 
 - url: /index.php*
-  script: index.php
+  script: php/index.php
+
+- url: /logout.php*
+  script: php/logout.php
+
+- url: /panel.php*
+  script: php/panel.php
 
 - url: .*
-  script: 404.php
+  script: php/404.php

@@ -9,5 +9,8 @@ else if (file_get_contents($fs . "/login_hash.txt") != hash("sha256", $_POST["lo
     die("Incorrect credentials");
 }
 else {
-    echo("login " . hash("sha256", $_POST["login"]));
+    session_start();
+    $_SESSION["login"] = hash("sha256", $_POST["login"]);
+    session_write_close();
+    echo("login ok");
 }
