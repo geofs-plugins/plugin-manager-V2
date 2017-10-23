@@ -11,6 +11,7 @@
 //
 
 (function() {
+	var CORE_VERSION = "0.1.0";
 	SkyXDebug.log("Core has been loaded");
 });
 
