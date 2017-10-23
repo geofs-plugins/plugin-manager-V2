@@ -8,3 +8,9 @@
 // 4. Add a UI to manage extensions (add, remove, update, etc.)
 //
 // This is the release version of the file.
+// (Add if I missed something, Ron)
+//
+
+(function() {
+	SkyXDebug.log("Core has been loaded");
+});
