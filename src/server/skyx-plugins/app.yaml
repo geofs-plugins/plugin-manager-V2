@@ -9,5 +9,11 @@ handlers:
   static_files: img/favicon.ico
   upload: img/favicon\.ico
 
-- url: /commit.php?
+- url: /commit.php*
   script: commit.php
+
+- url: /update.php*
+  script: update.php
+
+- url: /download.php*
+  script: download.php

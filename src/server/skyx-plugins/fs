@@ -1,3 +1,4 @@
 <?php
 $fs = "gs://skyx_files";
+$url = "http://localhost:8080";
 ?>

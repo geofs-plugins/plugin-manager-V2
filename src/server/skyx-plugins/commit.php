@@ -24,15 +24,16 @@ $target = file_get_contents($url);
 
 $v_matches = 0;
 preg_match('/var CORE\_VERSION \= \"(.+?)\"\;/', $target, $v_matches, 0);
-if (count($v_matches) < 1) {
+if (count($v_matches) < 2) {
     die("no version line");
 }
 
-$version = $v_matches[0][1];
+$version = $v_matches[1];
 
 file_put_contents($fs . "/files/skyx_version.txt", $version);
 file_put_contents($fs . "/files/skyx_core.user.js", $target);
 
-echo "ok";
+echo $version;
+echo " ok";
     
 ?>
