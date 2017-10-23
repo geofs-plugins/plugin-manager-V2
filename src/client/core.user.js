@@ -7,5 +7,4 @@
 // 3. Prodive a GeoFS API for adding UI elements and modifying base GeoFS methods.
 // 4. Add a UI to manage extensions (add, remove, update, etc.)
 //
-// (Add if I missed something, Ron)
-//
+// This is the release version of the file.
