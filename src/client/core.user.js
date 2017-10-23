@@ -9,3 +9,7 @@
 //
 // (Add if I missed something, Ron)
 //
+
+(function() {
+	SkyXDebug.log("Core has been loaded");
+});

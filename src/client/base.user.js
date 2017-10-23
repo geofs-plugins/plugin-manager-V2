@@ -59,6 +59,26 @@ SkyX.Debugger = function() {
 	
 	/*
 	Description:
+		Will output a console log and optionally state what extension it came from.
+	
+	Parameters:
+		string - message - the message of the log.
+		object -  module - the extension object (usually just passing `this` would be enough)
+		
+	Return value:
+		none
+	*/
+	this.log = function(message, module) {
+		if (module) {
+			console.log("[" + module.name + "] SkyX Debugger: " + message);
+		}
+		else {
+			console.log("SkyX Debugger: " + message);
+		}
+	};
+	
+	/*
+	Description:
 		Sets global window tag functions like __DEPRECATED__ or __UNTESTED__ or __NOT_WORKING__
 		Put these tags only inside functions - in the first line so they are clearly visible.
 	*/
