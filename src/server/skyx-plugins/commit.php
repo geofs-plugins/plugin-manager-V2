@@ -16,7 +16,7 @@ if ($event != "push") {
 }
 
 if ($payload->ref != "refs/heads/release") {
-    //die("not release");
+    die("not release");
 }
 
 $url = "https://raw.githubusercontent.com/" . $payload->repository->full_name . "/release/src/client/core.user.js";

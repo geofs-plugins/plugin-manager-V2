@@ -110,6 +110,7 @@ Description:
 */
 SkyX.SkyXBase = function() {
 	
+	var DEFAULT_UPDATE_URL = "http://localhost:8080/download.php";
 	
 	/*
 	Description:
@@ -126,6 +127,14 @@ SkyX.SkyXBase = function() {
 	this.query_version = function() {
 		return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
 	};
+
+	/*
+	Description:
+		updates the core version number
+	*/
+	this.update_version = function(ver) {
+		localStorage.setItem("skyx_version", ver);
+	}
 	
 	/*
 	Description:
@@ -193,6 +202,28 @@ SkyX.SkyXBase = function() {
 		};
 		a();
 	};
+
+	this.first_update = function() {
+		if (this.query_version() == null) {
+
+			var src = localStorage.getItem("skyx_default_url") || DEFAULT_UPDATE_URL;
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					localStorage.setItem("skyx_core", this.responseText);
+					eval(this.responseText)();
+				}
+			};
+			xhttp.open("GET", src, true);
+			xhttp.send();
+			return true;
+		}
+		else {
+			// TODO load presaved version
+			return false;
+		}
+	};
 	
 };
 
@@ -206,7 +237,7 @@ Description:
 	window.SkyXDebug = new SkyX.Debugger();
 	
 	SkyXBase.wait_geofs(function(fs) {
-		// Do things after GeoFS is loaded.
+		SkyXBase.first_update();
 	});
 	
 })();
