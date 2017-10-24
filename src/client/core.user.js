@@ -13,6 +13,26 @@
 (function() {
 	var CORE_VERSION = "0.1.0";
 	SkyXDebug.log("Core has been loaded");
+
+	// TODO : Load jQuery
+	if
+
+	// load ui.user.html into a settings collapsable item
+	var baseContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/master/";
+
+	$.ajax({
+		url : baseContentUrl + "src/client/ui.base.html",
+		callback : function(data) {
+			$(".geofs-list").append($("li").addClass("geofs-list-collapsible-item").html(data));
+		}
+	});
+
+
+	// TODO : Update core.user.js
+	// TODO : Update ui.user.html
+
 });
+
+
 
 // Adding some lines to trigger WebHook
