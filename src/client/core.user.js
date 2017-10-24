@@ -10,22 +10,37 @@
 // (Add if I missed something, Ron)
 //
 
-(function() {
-	var CORE_VERSION = "0.1.0";
-	SkyXDebug.log("Core has been loaded");
+// waits for jquery to load then call method
+function waitForJquery(method) {
+	if(window.jQuery) {
+		method();
+	} else {
+		setTimeout(function() {waitForJquery(method)} , 50);
+	}
+}
 
-	// TODO : Load jQuery
-	if
+// main function
+function main() {
 
-	// load ui.user.html into a settings collapsable item
-	var baseContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/master/";
+	//if this browser suppoprt Local Storage
+	if(typeof(Storage) !== "undefined") {
 
-	$.ajax({
-		url : baseContentUrl + "src/client/ui.base.html",
-		callback : function(data) {
-			$(".geofs-list").append($("li").addClass("geofs-list-collapsible-item").html(data));
-		}
-	});
+		// load ui.user.html into a settings collapsable item
+		var baseContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/master/";
+
+		$.ajax({
+			url : baseContentUrl + "src/client/ui.base.html",
+			callback : function(data) {
+				$(".geofs-list").append($("li").addClass("geofs-list-collapsible-item").html(data));
+			}
+		});
+
+		var CORE_VERSION = "0.1.0";
+		SkyXDebug.log("Core has been loaded");
+	} else {
+		console.log("Sorry, SkyX cannot run without local storage support");
+	}
+
 
 
 	// TODO : Update core.user.js
@@ -33,6 +48,4 @@
 
 });
 
-
-
-// Adding some lines to trigger WebHook
+// TODO : Adding some lines to trigger WebHook
