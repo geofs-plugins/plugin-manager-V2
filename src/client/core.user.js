@@ -26,9 +26,11 @@ function notify(msg) {
 	alert("Notifications : " + msg);
 }
 
+// debug messages
 function debug(msg) {
 	console.log(msg);
 }
+
 
 // main function
 function main() {
@@ -80,7 +82,7 @@ function main() {
 								notify("Succesfuly updated SkyX V2, please refresh GeoFS for the changes to take affect");
 							}
 						} else {
-							setTimeout(function() {waitForUpdate()} , 500);
+							setTimeout(function() {waitForUpdate()} , 50);
 						}
 					}
 
