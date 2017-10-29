@@ -19,6 +19,17 @@ function waitForJquery(method) {
 	}
 }
 
+
+// tells the user a message
+function notify(msg) {
+	// TODO : Implement
+	alert("Notifications : " + msg);
+}
+
+function debug(msg) {
+	console.log(msg);
+}
+
 // main function
 function main() {
 
@@ -29,7 +40,7 @@ function main() {
 		let remoteContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/master/";
 		var uiData = localStorage.getItem("ui.user.html");
 		if (uiData === null) {
-			// ALERT : please wait for the ui file to download
+			notify("Downloading ui, please wait");
 		} else {
 			// load the ui
 			$(".geofs-list").append($("li")
@@ -41,6 +52,7 @@ function main() {
 		$.ajax({
 			url : "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/release",
 			callback : function(data) {
+				debug("Succesfuly got latest commit hash");
 				let latestRemoteCommitHash = data["sha"];
 
 				if(latestRemoteCommitHash != localStorage.getItem("latestRemoteCommitHash")) {
@@ -57,7 +69,7 @@ function main() {
 					function waitForUpdate() {
 						if (filesFinished = filesToUpdate.length) {
 							if (hasFailed) {
-								// ALERT : An error occured
+								notify("One of the files failed to download");
 
 								// deleting all of the files
 								for (var file in filesToUpdate) {
@@ -65,7 +77,7 @@ function main() {
 								}
 							} else {
 								localStorage.setItem("latestRemoteCommitHash", latestRemoteCommitHash);
-								// ALERT : everything has finished, please refresh
+								notify("Succesfuly updated SkyX V2, please refresh GeoFS for the changes to take affect");
 							}
 						} else {
 							setTimeout(function() {waitForUpdate()} , 500);
@@ -80,6 +92,7 @@ function main() {
 							url : remoteContentUrl + "src/client/" + file,
 
 							callback : function(data) {
+								debug("got " + file);
 								if((!("ui.user.html" in localStorage)) && file == "ui.user.html") {
 									$(".geofs-list").append($("li")
 											.addClass("geofs-list-collapsible-item")
@@ -91,21 +104,21 @@ function main() {
 							} ,
 
 							error : function(){
+								debug("failed " + file);
 								hasFailed = false;
 								filesFinished++;
 							}
 						});
 					}
 				}
+			} ,
+			error : function() {
+				debug("Getting latest commit hash failed");
 			}
 		});
-
-
-		var CORE_VERSION = "0.1.0";
-		SkyXDebug.log("Core has been loaded");
 	} else {
-		console.log("Sorry, SkyX cannot run at the moment without local storage support");
+		notify("ERROR , your browser doesn't support Local Storage");
 	}
-});
+}
 
-// TODO : Adding some lines to trigger WebHook
+waitForJquery(main);
