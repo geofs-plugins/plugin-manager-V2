@@ -38,7 +38,7 @@ function main() {
 
 		// loding the ui
 		let remoteContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/master/";
-		var uiData = localStorage.getItem("ui.user.html");
+		var uiData = localStorage.getItem("SkyX/ui.user.html");
 		if (uiData === null) {
 			notify("Downloading ui, please wait");
 		} else {
@@ -55,7 +55,7 @@ function main() {
 				debug("Succesfuly got latest commit hash");
 				let latestRemoteCommitHash = data["sha"];
 
-				if(latestRemoteCommitHash != localStorage.getItem("latestRemoteCommitHash")) {
+				if(latestRemoteCommitHash != localStorage.getItem("SkyX/version")) {
 
 					let filesToUpdate = ["core.user.js", "ui.user.html"];
 
@@ -73,10 +73,10 @@ function main() {
 
 								// deleting all of the files
 								for (var file in filesToUpdate) {
-									localStorage.setItem(file, null);
+									localStorage.setItem("SkyX/" + file, null);
 								}
 							} else {
-								localStorage.setItem("latestRemoteCommitHash", latestRemoteCommitHash);
+								localStorage.setItem("SkyX/version", latestRemoteCommitHash);
 								notify("Succesfuly updated SkyX V2, please refresh GeoFS for the changes to take affect");
 							}
 						} else {
@@ -93,13 +93,13 @@ function main() {
 
 							callback : function(data) {
 								debug("got " + file);
-								if((!("ui.user.html" in localStorage)) && file == "ui.user.html") {
+								if((!("SkyX/ui.user.html" in localStorage)) && file == "ui.user.html") {
 									$(".geofs-list").append($("li")
 											.addClass("geofs-list-collapsible-item")
 											.html(uiData));
 								}
 
-								localStorage.setItem(file, data);
+								localStorage.setItem("SkyX/" + file, data);
 								filesFinished++;
 							} ,
 
