@@ -78,31 +78,6 @@ SkyX.Debugger = function() {
 		}
 	};
 	
-	/*
-	Description:
-		Sets global window tag functions like __DEPRECATED__ or __UNTESTED__ or __NOT_WORKING__
-		Put these tags only inside functions - in the first line so they are clearly visible.
-	*/
-	this.set_window_tags = function() {
-		let warn = this.warn;
-		
-		window.__DEPRECATED__ = function() {
-			warn("__DEPRECATED__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__UNTESTED__ = function() {
-			warn("__UNTESTED__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__NOT_WORKING__ = function() {
-			warn("__NOT_WORKING__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__BAD__ = function() {
-			warn("__BAD__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		
-	};
-	
-	this.set_window_tags();
-	
 };
 
 /*
@@ -187,7 +162,6 @@ SkyX.SkyXBase = function() {
 		none
 	*/
 	this.wait_geofs = function(callback) {
-		__UNTESTED__();
 		
 		let query_geofs = this.query_geofs;
 
