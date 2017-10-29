@@ -110,7 +110,8 @@ Description:
 	The main class of base.user.js - the SkyXBase is responsible for the tasks listed in the top of the file.
 */
 SkyX.SkyXBase = function() {
-	
+
+	// TODO : Change this url to the raw github content one	
 	var DEFAULT_UPDATE_URL = "http://localhost:8080/download.php";
 	
 	/*
@@ -125,16 +126,16 @@ SkyX.SkyXBase = function() {
 		null - no version of SkyXCore is installed
 		undefined - localStorage is not supported (problem!)
 	*/
-	this.query_version = function() {
-		return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
-	};
+	// this.query_version = function() {
+	// 	return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
+	// };
 
 	/*
 	Description:
 		updates the core version number
 	*/
 	this.update_version = function(ver) {
-		localStorage.setItem("skyx_version", ver);
+		localStorage.setItem("SkyX/version", ver);
 	}
 	
 	/*
@@ -158,7 +159,7 @@ SkyX.SkyXBase = function() {
 		}
 		
 		// Retrieving the core code
-		return localStorage.getItem("skyx_core") || null;
+		return localStorage.getItem("SkyX/core.user.js") || null;
 	};
 	
 	/*
@@ -207,12 +208,12 @@ SkyX.SkyXBase = function() {
 	this.first_update = function() {
 		if (this.query_version() == null) {
 
-			var src = localStorage.getItem("skyx_default_url") || DEFAULT_UPDATE_URL;
+			var src = localStorage.getItem("SkyX/defaultUpdateUrl") || DEFAULT_UPDATE_URL;
 
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-					localStorage.setItem("skyx_core", this.responseText);
+					localStorage.setItem("SkyX/core.user.js", this.responseText);
 					eval(this.responseText)();
 				}
 			};
@@ -221,7 +222,7 @@ SkyX.SkyXBase = function() {
 			return true;
 		}
 		else {
-			// TODO load presaved version
+			eval(localStorage.getItem("SkyX/core.user.js"));
 			return false;
 		}
 	};
