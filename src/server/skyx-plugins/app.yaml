@@ -9,20 +9,11 @@ handlers:
   static_files: img/favicon.ico
   upload: img/favicon\.ico
 
-- url: /login_back.php*
-  script: php/login_back.php
+- url: /commit.php*
+  script: commit.php
 
-- url: /*
-  script: php/index.php
+- url: /update.php*
+  script: update.php
 
-- url: /index.php*
-  script: php/index.php
-
-- url: /logout.php*
-  script: php/logout.php
-
-- url: /panel.php*
-  script: php/panel.php
-
-- url: .*
-  script: php/404.php
+- url: /download.php*
+  script: download.php
