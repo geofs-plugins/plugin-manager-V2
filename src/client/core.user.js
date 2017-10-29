@@ -7,6 +7,7 @@
 // 3. Prodive a GeoFS API for adding UI elements and modifying base GeoFS methods.
 // 4. Add a UI to manage extensions (add, remove, update, etc.)
 //
+// This is the release version of the file.
 // (Add if I missed something, Ron)
 //
 
@@ -18,7 +19,6 @@ function waitForJquery(method) {
 		setTimeout(function() {waitForJquery(method)} , 50);
 	}
 }
-
 
 // tells the user a message
 function notify(msg) {
