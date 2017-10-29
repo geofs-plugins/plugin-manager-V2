@@ -7,18 +7,19 @@
 // 3. Prodive a GeoFS API for adding UI elements and modifying base GeoFS methods.
 // 4. Add a UI to manage extensions (add, remove, update, etc.)
 //
-// This is the release version of the file.
 // (Add if I missed something, Ron)
 //
-
 // waits for jquery to load then call method
 function waitForJquery(method) {
-	if(window.jQuery) {
+	if (window.jQuery) {
 		method();
 	} else {
-		setTimeout(function() {waitForJquery(method)} , 50);
+		setTimeout(function() {
+			waitForJquery(method);
+		}, 50);
 	}
 }
+
 
 // tells the user a message
 function notify(msg) {
@@ -36,28 +37,28 @@ function debug(msg) {
 function main() {
 
 	//if this browser suppoprt Local Storage
-	if(typeof(Storage) !== "undefined") {
+	if (typeof(Storage) !== "undefined") {
 
 		// loding the ui
-		let remoteContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/master/";
+		let remoteContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/release/";
 		var uiData = localStorage.getItem("SkyX/ui.user.html");
 		if (uiData === null) {
 			notify("Downloading ui, please wait");
 		} else {
 			// load the ui
 			$(".geofs-list").append($("li")
-					.addClass("geofs-list-collapsible-item")
-					.html(uiData));
+				.addClass("geofs-list-collapsible-item")
+				.html(uiData));
 		}
 
 		// updating files
 		$.ajax({
-			url : "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/release",
-			callback : function(data) {
+			url: "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/release",
+			success: function(data) {
 				debug("Succesfuly got latest commit hash");
 				let latestRemoteCommitHash = data["sha"];
 
-				if(latestRemoteCommitHash != localStorage.getItem("SkyX/version")) {
+				if (latestRemoteCommitHash != localStorage.getItem("SkyX/version")) {
 
 					let filesToUpdate = ["core.user.js", "ui.user.html"];
 
@@ -66,23 +67,27 @@ function main() {
 					let hasFailed = false;
 					let filesFinished = 0;
 
+
 					// wait for the files to finish update and notify
 					// the user accordingly
 					function waitForUpdate() {
-						if (filesFinished = filesToUpdate.length) {
+						console.log("Testing stuff out");
+						if (filesFinished == filesToUpdate.length) {
 							if (hasFailed) {
 								notify("One of the files failed to download");
 
 								// deleting all of the files
 								for (var file in filesToUpdate) {
-									localStorage.setItem("SkyX/" + file, null);
+									localStorage.setItem("SkyX/" + filesToUpdate[file], null);
 								}
 							} else {
 								localStorage.setItem("SkyX/version", latestRemoteCommitHash);
 								notify("Succesfuly updated SkyX V2, please refresh GeoFS for the changes to take affect");
 							}
 						} else {
-							setTimeout(function() {waitForUpdate()} , 50);
+							setTimeout(function() {
+								waitForUpdate();
+							}, 50);
 						}
 					}
 
@@ -91,30 +96,31 @@ function main() {
 					// go over all of the files and update them all
 					for (let file in filesToUpdate) {
 						$.ajax({
-							url : remoteContentUrl + "src/client/" + file,
-
-							callback : function(data) {
-								debug("got " + file);
-								if((!("SkyX/ui.user.html" in localStorage)) && file == "ui.user.html") {
+							url: remoteContentUrl + "src/client/" + filesToUpdate[file],
+							success: function(data) {
+								debug("got " + filesToUpdate[file]);
+								if ((!("SkyX/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
 									$(".geofs-list").append($("li")
-											.addClass("geofs-list-collapsible-item")
-											.html(uiData));
+										.addClass("geofs-list-collapsible-item")
+										.html(uiData));
 								}
 
-								localStorage.setItem("SkyX/" + file, data);
+								localStorage.setItem("SkyX/" + filesToUpdate[file], data);
 								filesFinished++;
-							} ,
+							},
 
-							error : function(){
-								debug("failed " + file);
-								hasFailed = false;
+							error: function() {
+								debug("failed to download" + filesToUpdate[file]);
+								hasFailed = true;
 								filesFinished++;
 							}
 						});
 					}
+				} else {
+					debug("Everything is up to date");
 				}
-			} ,
-			error : function() {
+			},
+			error: function() {
 				debug("Getting latest commit hash failed");
 			}
 		});
@@ -123,4 +129,9 @@ function main() {
 	}
 }
 
-waitForJquery(main);
+
+
+(function() {
+	'use strict';
+	waitForJquery(main);
+})();
