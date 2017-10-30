@@ -4,7 +4,8 @@
 // 1. In the first run of the plugin, download the main.user.js from the server, store it into the localStorage
 // 2. Wait for jQuery and GeoFS objects to load in the page, then load the main.user.js from the localStorage and run it
 
-// TODO - make the file
+// TODO - Fix mistakes and change the method Base auto-updates
+
 
 /*
 Description:
@@ -77,31 +78,6 @@ SkyX.Debugger = function() {
 		}
 	};
 	
-	/*
-	Description:
-		Sets global window tag functions like __DEPRECATED__ or __UNTESTED__ or __NOT_WORKING__
-		Put these tags only inside functions - in the first line so they are clearly visible.
-	*/
-	this.set_window_tags = function() {
-		let warn = this.warn;
-		
-		window.__DEPRECATED__ = function() {
-			warn("__DEPRECATED__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__UNTESTED__ = function() {
-			warn("__UNTESTED__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__NOT_WORKING__ = function() {
-			warn("__NOT_WORKING__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__BAD__ = function() {
-			warn("__BAD__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		
-	};
-	
-	this.set_window_tags();
-	
 };
 
 /*
@@ -109,7 +85,9 @@ Description:
 	The main class of base.user.js - the SkyXBase is responsible for the tasks listed in the top of the file.
 */
 SkyX.SkyXBase = function() {
-	
+
+	// TODO : Change this url to the raw github content one	
+	var DEFAULT_UPDATE_URL = "http://localhost:8080/download.php";
 	
 	/*
 	Description:
@@ -123,9 +101,17 @@ SkyX.SkyXBase = function() {
 		null - no version of SkyXCore is installed
 		undefined - localStorage is not supported (problem!)
 	*/
-	this.query_version = function() {
-		return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
-	};
+	// this.query_version = function() {
+	// 	return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
+	// };
+
+	/*
+	Description:
+		updates the core version number
+	*/
+	this.update_version = function(ver) {
+		localStorage.setItem("SkyX/version", ver);
+	}
 	
 	/*
 	Description:
@@ -148,7 +134,7 @@ SkyX.SkyXBase = function() {
 		}
 		
 		// Retrieving the core code
-		return localStorage.getItem("skyx_core") || null;
+		return localStorage.getItem("SkyX/core.user.js") || null;
 	};
 	
 	/*
@@ -176,7 +162,6 @@ SkyX.SkyXBase = function() {
 		none
 	*/
 	this.wait_geofs = function(callback) {
-		__UNTESTED__();
 		
 		let query_geofs = this.query_geofs;
 
@@ -193,6 +178,28 @@ SkyX.SkyXBase = function() {
 		};
 		a();
 	};
+
+	this.first_update = function() {
+		if (this.query_version() == null) {
+
+			var src = localStorage.getItem("SkyX/defaultUpdateUrl") || DEFAULT_UPDATE_URL;
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					localStorage.setItem("SkyX/core.user.js", this.responseText);
+					eval(this.responseText)();
+				}
+			};
+			xhttp.open("GET", src, true);
+			xhttp.send();
+			return true;
+		}
+		else {
+			eval(localStorage.getItem("SkyX/core.user.js"));
+			return false;
+		}
+	};
 	
 };
 
@@ -206,7 +213,7 @@ Description:
 	window.SkyXDebug = new SkyX.Debugger();
 	
 	SkyXBase.wait_geofs(function(fs) {
-		// Do things after GeoFS is loaded.
+		SkyXBase.first_update();
 	});
 	
 })();
