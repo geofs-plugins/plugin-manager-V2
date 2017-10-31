@@ -12,7 +12,7 @@
 // waits for jquery to load then call method
 
 
-let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/release/src/";
+let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/";
 
 function waitForJquery(method) {
 	if (window.jQuery) {
@@ -69,7 +69,7 @@ function updateSelf() {
 
 	// updating files
 	$.ajax({
-		url: "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/release",
+		url: "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/dev",
 		success: function(data) {
 			debug("Succesfuly got latest commit hash");
 			let latestRemoteCommitHash = data["sha"];
