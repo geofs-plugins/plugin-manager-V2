@@ -112,7 +112,7 @@ function updateSelf() {
 				// go over all of the files and update them all
 				for (let file in filesToUpdate) {
 					$.ajax({
-						url: remoteContentUrl + "src/" + filesToUpdate[file],
+						url: remoteContentUrl + filesToUpdate[file],
 						success: function(data) {
 							debug("got " + filesToUpdate[file]);
 							if ((!("SkyX/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
