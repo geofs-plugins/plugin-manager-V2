@@ -1,3 +1,14 @@
+// ==UserScript==
+// @name            SkyX V2
+// @author          Yotam Salmon & Ron Popov
+// @namespace       GeoFS-plugins
+// @version         0.0.1
+// @description     Adds additional content to Geo-FS
+// @match           http://geo-fs.com/geofs.php*
+// @match           http://www.geo-fs.com/geofs.php*
+// @grant       none
+// ==/UserScript==
+
 // This is the raw script that will be included in the Monkey user-script.
 // Its purposes:
 //
@@ -16,7 +27,7 @@ window.SkyX = {};
 /*
 Description:
 	A class to signal that something went wrong.
-	Will usually be used like: 
+	Will usually be used like:
 		throw new SkyX.Exception(<error message>);
 */
 SkyX.Exception = function(message) {
@@ -27,7 +38,7 @@ SkyX.Exception = function(message) {
 /*
 Description:
 	An exception that signals that LocalStorage is not supported.
-	
+
 Base class:
 	SkyX.Exception
 */
@@ -37,15 +48,15 @@ SkyX.LocalStorageException = function(message) {
 };
 
 SkyX.Debugger = function() {
-	
+
 	/*
 	Description:
 		Will output a console warning and optionally state what extension it came from.
-	
+
 	Parameters:
 		string - message - the message of the warning.
 		object -  module - the extension object (usually just passing `this` would be enough)
-		
+
 	Return value:
 		none
 	*/
@@ -57,7 +68,7 @@ SkyX.Debugger = function() {
 			console.warn("SkyX Debugger: " + message);
 		}
 	};
-	
+
 	/*
 	Description:
 		Will output a console log and optionally state what extension it came from.
@@ -87,7 +98,7 @@ Description:
 SkyX.SkyXBase = function() {
 
 	// TODO : Change this url to the raw github content one	
-	var DEFAULT_UPDATE_URL = "http://localhost:8080/download.php";
+	var DEFAULT_UPDATE_URL = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/release/src/core.user.js";
 	
 	/*
 	Description:
@@ -101,9 +112,9 @@ SkyX.SkyXBase = function() {
 		null - no version of SkyXCore is installed
 		undefined - localStorage is not supported (problem!)
 	*/
-	// this.query_version = function() {
-	// 	return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
-	// };
+	this.query_version = function() {
+		return window["localStorage"] && (localStorage.getItem("SkyX/version") || null);
+	};
 
 	/*
 	Description:
@@ -187,8 +198,24 @@ SkyX.SkyXBase = function() {
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-					localStorage.setItem("SkyX/core.user.js", this.responseText);
-					eval(this.responseText)();
+
+                    let coreContent = this.responseText;
+					
+                    eval(this.responseText)();
+
+					// get the current commit hash and save it to localStorage
+					var commitHistoryUrl = "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/release";
+					var xhttp2 = new XMLHttpRequest();
+					xhttp2.onreadystatehange = function() {
+						if(this.readyState == 4 && this.status == 200) {
+							var commitHash = this.responseText["sha"];
+							localStorage.setItem("SkyX/core.user.js", coreContent);
+							localStorage.setItem("SkyX/version", commitHash);
+						}
+					};
+
+                    xhttp2.open("GET", commitHistoryUrl, true);
+                    xhttp2.send();
 				}
 			};
 			xhttp.open("GET", src, true);
@@ -196,11 +223,15 @@ SkyX.SkyXBase = function() {
 			return true;
 		}
 		else {
-			eval(localStorage.getItem("SkyX/core.user.js"));
-			return false;
+            var localContent = localStorage.getItem("SkyX/core.user.js");
+            if(localContent != null) {
+                eval(localContent)();
+            }
+			
+            return false;
 		}
 	};
-	
+
 };
 
 /*
@@ -208,12 +239,14 @@ Description:
 	Main code of base.user.js
 */
 (function() {
-	
+
+	'use strict';
+
 	window.SkyXBase = new SkyX.SkyXBase();
 	window.SkyXDebug = new SkyX.Debugger();
-	
+
 	SkyXBase.wait_geofs(function(fs) {
 		SkyXBase.first_update();
 	});
-	
+
 })();

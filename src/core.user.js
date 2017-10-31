@@ -12,7 +12,7 @@
 // waits for jquery to load then call method
 
 
-let remoteContentUrl = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/release/src/";
+let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/release/src/";
 
 function waitForJquery(method) {
 	if (window.jQuery) {
