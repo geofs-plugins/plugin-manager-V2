@@ -87,7 +87,7 @@ function updateSelf() {
 				// wait for the files to finish update and notify
 				// the user accordingly
 				function waitForUpdate() {
-					(filesFinished == filesToUpdate.length) {
+					if (filesFinished == filesToUpdate.length) {
 						if (hasFailed) {
 							notify("One of the files failed to download");
 
