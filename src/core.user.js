@@ -2,18 +2,17 @@
 // This architecture will allow us not only to update extensions, but to update the SkyX core remotely.
 // Its purposes:
 //
-// 1. Load all extensions and run them.
-// 2. Check for plugin updates from their servers
-// 3. Prodive a GeoFS API for adding UI elements and modifying base GeoFS methods.
-// 4. Add a UI to manage extensions (add, remove, update, etc.)
-//
-// (Add if I missed something, Ron)
-//
-// waits for jquery to load then call method
+// 1. Load all extensions and run them - TODO
+// 2. Check for plugin updates from their servers - TODO
+// 3. Prodive a GeoFS API for adding UI elements and modifying base GeoFS methods - TODO
+// 4. Add a UI to manage extensions (add, remove, update, etc.) - WIP
+// 5. Update itself - CHECK
 
-
+// A link to the directory that contains all of the remote content
 let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/";
 
+// waits for jQuery to load and then
+// calls the callback function, passed as a parameter
 function waitForJquery(method) {
 	if (window.jQuery) {
 		method();
@@ -144,10 +143,8 @@ function updateSelf() {
 // main function
 // incharge of updating and loading the appropriate files
 function main() {
-
 	//if this browser suppoprt Local Storage
 	if (typeof(Storage) !== "undefined") {
-
 		loadUi();
 
 		loadPlugins();
@@ -155,11 +152,13 @@ function main() {
 		updatePlugin();
 
 		updateSelf();
-
 	} else {
 		notify("ERROR , your browser doesn't support Local Storage");
 	}
 }
 
-// waits for jQuery to load and then calls
-waitForJquery(main);
+// main code
+(function() {
+	// waits for jQuery to load and then calls
+	waitForJquery(main);
+})();

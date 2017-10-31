@@ -97,8 +97,7 @@ Description:
 */
 SkyX.SkyXBase = function() {
 
-	// TODO : Change this url to the raw github content one	
-	var DEFAULT_UPDATE_URL = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/core.user.js";
+	var DEFAULT_UPDATE_URL = "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/core.user.js";
 	
 	/*
 	Description:
@@ -190,6 +189,17 @@ SkyX.SkyXBase = function() {
 		a();
 	};
 
+
+	/*
+	Description:
+		downloads core.user.js if not saved in local storage, and loads it.
+
+	Parameters:
+		none
+	
+	Return values:
+		none
+	*/
 	this.first_update = function() {
 		if (this.query_version() == null) {
 
@@ -203,7 +213,9 @@ SkyX.SkyXBase = function() {
 					
                     eval(this.responseText);
 
-					// get the current commit hash and save it to localStorage
+					// fetches the latest commit hash and saved it in memory as SkyX/version
+					// it id done inside of the callback function to handle the rare case that
+					// fetching core.user.js will succed, but fetching the commit hash won't
 					var commitHistoryUrl = "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/dev";
 					var xhttp2 = new XMLHttpRequest();
 					xhttp2.onreadystatehange = function() {
@@ -211,11 +223,15 @@ SkyX.SkyXBase = function() {
 							var commitHash = this.responseText["sha"];
 							localStorage.setItem("SkyX/core.user.js", coreContent);
 							localStorage.setItem("SkyX/version", commitHash);
+						} else {
+							// TODO : Alert that an error occured
 						}
 					};
 
                     xhttp2.open("GET", commitHistoryUrl, true);
                     xhttp2.send();
+				} else {
+					// TODO : Alert that an error occured
 				}
 			};
 			xhttp.open("GET", src, true);
