@@ -10,6 +10,10 @@
 // (Add if I missed something, Ron)
 //
 // waits for jquery to load then call method
+
+
+let remoteContentUrl = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/release/src/";
+
 function waitForJquery(method) {
 	if (window.jQuery) {
 		method();
@@ -36,13 +40,12 @@ function debug(msg) {
 // and inserts it into the page
 function loadUi() {
 		// loading the ui
-		let remoteContentUrl = "https://raw.githubusercontent.com/geofs-plugins/plugin-manager-V2/release/";
 		var uiData = localStorage.getItem("SkyX/ui.user.html");
 		if (uiData === null) {
 			notify("Downloading ui, please wait");
 		} else {
 			// load the ui
-			$(".geofs-list").append($("li")
+			$(".geofs-preference-list").append($("li")
 				.addClass("geofs-list-collapsible-item")
 				.html(uiData));
 		}
@@ -109,7 +112,7 @@ function updateSelf() {
 				// go over all of the files and update them all
 				for (let file in filesToUpdate) {
 					$.ajax({
-						url: remoteContentUrl + "src/client/" + filesToUpdate[file],
+						url: remoteContentUrl + "src/" + filesToUpdate[file],
 						success: function(data) {
 							debug("got " + filesToUpdate[file]);
 							if ((!("SkyX/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
@@ -150,7 +153,7 @@ function main() {
 
 		loadPlugins();
 
-		updatePlugins();
+		updatePlugin();
 
 		updateSelf();
 
