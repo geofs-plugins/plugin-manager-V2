@@ -87,8 +87,7 @@ function updateSelf() {
 				// wait for the files to finish update and notify
 				// the user accordingly
 				function waitForUpdate() {
-					console.log("Testing stuff out");
-					if (filesFinished == filesToUpdate.length) {
+					(filesFinished == filesToUpdate.length) {
 						if (hasFailed) {
 							notify("One of the files failed to download");
 
@@ -118,7 +117,7 @@ function updateSelf() {
 							if ((!("SkyX/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
 								$(".geofs-list").append($("li")
 									.addClass("geofs-list-collapsible-item")
-									.html(uiData));
+									.html(data));
 							}
 
 							localStorage.setItem("SkyX/" + filesToUpdate[file], data);
