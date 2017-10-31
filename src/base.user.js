@@ -98,7 +98,7 @@ Description:
 SkyX.SkyXBase = function() {
 
 	// TODO : Change this url to the raw github content one	
-	var DEFAULT_UPDATE_URL = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/release/src/core.user.js";
+	var DEFAULT_UPDATE_URL = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/core.user.js";
 	
 	/*
 	Description:
@@ -201,10 +201,10 @@ SkyX.SkyXBase = function() {
 
                     let coreContent = this.responseText;
 					
-                    eval(this.responseText)();
+                    eval(this.responseText);
 
 					// get the current commit hash and save it to localStorage
-					var commitHistoryUrl = "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/release";
+					var commitHistoryUrl = "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/dev";
 					var xhttp2 = new XMLHttpRequest();
 					xhttp2.onreadystatehange = function() {
 						if(this.readyState == 4 && this.status == 200) {
@@ -225,7 +225,7 @@ SkyX.SkyXBase = function() {
 		else {
             var localContent = localStorage.getItem("SkyX/core.user.js");
             if(localContent != null) {
-                eval(localContent)();
+                eval(localContent);
             }
 			
             return false;
