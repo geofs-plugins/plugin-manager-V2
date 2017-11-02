@@ -44,11 +44,16 @@ function loadUi() {
 	if (uiData === null) {
 		notify("Downloading ui, please wait");
 	} else {
-		// load the ui
-		$(".geofs-preference-list").append($("li")
-			.addClass("geofs-list-collapsible-item")
-			.html(uiData));
+		insertUi(uiData);
 	}
+}
+
+// Takes the content given and adds that to the game
+// in the right spot
+function insertUi(content) {
+	$(".geofs-preference-list").
+		append("<li class='geofs-list-collapsible-item'>SkyX" + 
+			"<ul class='geofs-list'>"+ content +"</ul></li>");
 }
 
 // TODO : Implement this
@@ -114,10 +119,10 @@ function updateSelf() {
 						url: remoteContentUrl + filesToUpdate[file],
 						success: function(data) {
 							debug("got " + filesToUpdate[file]);
+							// if the ui hasn't been loaded yet, and the current file is the ui file
+							// the load the content you just fetched.
 							if ((!("SkyX/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
-								$(".geofs-list").append($("li")
-									.addClass("geofs-list-collapsible-item")
-									.html(data));
+								insertUi(data);
 							}
 
 							localStorage.setItem("SkyX/" + filesToUpdate[file], data);
