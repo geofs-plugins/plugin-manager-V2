@@ -8,6 +8,7 @@
 // 4. Add a UI to manage extensions (add, remove, update, etc.) - WIP
 // 5. Update itself - CHECK
 
+
 // A link to the directory that contains all of the remote content
 let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/";
 
@@ -31,23 +32,23 @@ function notify(msg) {
 
 // debug messages
 function debug(msg) {
-	console.log(msg);
+console.log(msg);
 }
 
 // TODO : Fix this, see github issue
 // loads the ui from local storage
 // and inserts it into the page
 function loadUi() {
-		// loading the ui
-		var uiData = localStorage.getItem("SkyX/ui.user.html");
-		if (uiData === null) {
-			notify("Downloading ui, please wait");
-		} else {
-			// load the ui
-			$(".geofs-preference-list").append($("li")
-				.addClass("geofs-list-collapsible-item")
-				.html(uiData));
-		}
+	// loading the ui
+	var uiData = localStorage.getItem("SkyX/ui.user.html");
+	if (uiData === null) {
+		notify("Downloading ui, please wait");
+	} else {
+		// load the ui
+		$(".geofs-preference-list").append($("li")
+			.addClass("geofs-list-collapsible-item")
+			.html(uiData));
+	}
 }
 
 // TODO : Implement this
