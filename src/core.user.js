@@ -8,16 +8,25 @@
 // 4. Add a UI to manage extensions (add, remove, update, etc.) - WIP
 // 5. Update itself - CHECK
 
+// Affects what branch to pull from, dev or release.
+var isDebug = true;
+
+// The name of the branch to pull from
+let remoteBranch = (isDebug ? "dev" : "release");
 
 // A link to the directory that contains all of the remote content
-let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/";
+let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/" + remoteBranch + "/src/";
+
 
 // waits for jQuery to load and then
 // calls the callback function, passed as a parameter
 function waitForJquery(method) {
+	console.log("waiting for jQuery");
 	if (window.jQuery) {
+		console.log("jQuery found");
 		method();
 	} else {
+		console.log("jQuery not found trying again");
 		setTimeout(function() {
 			waitForJquery(method);
 		}, 50);
@@ -71,10 +80,12 @@ function updatePlugin() {
 // TODO : Handle download failure better, see github issue
 // updates core.user.js and saves it into localStorage
 function updateSelf() {
+	console.log("Enter updateSelf()");
 
 	// updating files
 	$.ajax({
-		url: "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/dev",
+		url: "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/" + remoteBranch,
+
 		success: function(data) {
 			debug("Succesfuly got latest commit hash");
 			let latestRemoteCommitHash = data["sha"];
