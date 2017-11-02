@@ -24,6 +24,7 @@ function waitForJquery(method) {
 	console.log("waiting for jQuery");
 	if (window.jQuery) {
 		console.log("jQuery found");
+		clearTimeout();
 		method();
 	} else {
 		console.log("jQuery not found trying again");
