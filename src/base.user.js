@@ -1,10 +1,27 @@
+// ==UserScript==
+// @name            SkyX V2
+// @author          Yotam Salmon & Ron Popov
+// @namespace       GeoFS-plugins
+// @version         0.0.1
+// @description     Adds additional content to Geo-FS
+// @match           http://geo-fs.com/geofs.php*
+// @match           http://www.geo-fs.com/geofs.php*
+// @grant       none
+// ==/UserScript==
+
 // This is the raw script that will be included in the Monkey user-script.
 // Its purposes:
 //
 // 1. In the first run of the plugin, download the main.user.js from the server, store it into the localStorage
 // 2. Wait for jQuery and GeoFS objects to load in the page, then load the main.user.js from the localStorage and run it
 
-// TODO - make the file
+// TODO - Fix mistakes and change the method Base auto-updates
+
+// Affects what branch to pull from, dev or release.
+var isDebug = false;
+
+// The name of the branch to pull from
+let remoteBranch = (isDebug ? "dev" : "release");
 
 /*
 Description:
@@ -15,7 +32,7 @@ window.SkyX = {};
 /*
 Description:
 	A class to signal that something went wrong.
-	Will usually be used like: 
+	Will usually be used like:
 		throw new SkyX.Exception(<error message>);
 */
 SkyX.Exception = function(message) {
@@ -26,7 +43,7 @@ SkyX.Exception = function(message) {
 /*
 Description:
 	An exception that signals that LocalStorage is not supported.
-	
+
 Base class:
 	SkyX.Exception
 */
@@ -36,15 +53,15 @@ SkyX.LocalStorageException = function(message) {
 };
 
 SkyX.Debugger = function() {
-	
+
 	/*
 	Description:
 		Will output a console warning and optionally state what extension it came from.
-	
+
 	Parameters:
 		string - message - the message of the warning.
 		object -  module - the extension object (usually just passing `this` would be enough)
-		
+
 	Return value:
 		none
 	*/
@@ -56,7 +73,7 @@ SkyX.Debugger = function() {
 			console.warn("SkyX Debugger: " + message);
 		}
 	};
-	
+
 	/*
 	Description:
 		Will output a console log and optionally state what extension it came from.
@@ -77,31 +94,6 @@ SkyX.Debugger = function() {
 		}
 	};
 	
-	/*
-	Description:
-		Sets global window tag functions like __DEPRECATED__ or __UNTESTED__ or __NOT_WORKING__
-		Put these tags only inside functions - in the first line so they are clearly visible.
-	*/
-	this.set_window_tags = function() {
-		let warn = this.warn;
-		
-		window.__DEPRECATED__ = function() {
-			warn("__DEPRECATED__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__UNTESTED__ = function() {
-			warn("__UNTESTED__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__NOT_WORKING__ = function() {
-			warn("__NOT_WORKING__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		window.__BAD__ = function() {
-			warn("__BAD__ alert for `" + arguments.callee.caller.name + "`");
-		};
-		
-	};
-	
-	this.set_window_tags();
-	
 };
 
 /*
@@ -109,7 +101,9 @@ Description:
 	The main class of base.user.js - the SkyXBase is responsible for the tasks listed in the top of the file.
 */
 SkyX.SkyXBase = function() {
-	
+
+	var DEFAULT_UPDATE_URL = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/"
+		+ remoteBranch + "/src/core.user.js";
 	
 	/*
 	Description:
@@ -124,7 +118,15 @@ SkyX.SkyXBase = function() {
 		undefined - localStorage is not supported (problem!)
 	*/
 	this.query_version = function() {
-		return window["localStorage"] && (localStorage.getItem("skyx_version") || null);
+		return window["localStorage"] && (localStorage.getItem("SkyX/version") || null);
+	};
+
+	/*
+	Description:
+		updates the core version number
+	*/
+	this.update_version = function(ver) {
+		localStorage.setItem("SkyX/version", ver);
 	};
 	
 	/*
@@ -148,7 +150,7 @@ SkyX.SkyXBase = function() {
 		}
 		
 		// Retrieving the core code
-		return localStorage.getItem("skyx_core") || null;
+		return localStorage.getItem("SkyX/core.user.js") || null;
 	};
 	
 	/*
@@ -176,7 +178,6 @@ SkyX.SkyXBase = function() {
 		none
 	*/
 	this.wait_geofs = function(callback) {
-		__UNTESTED__();
 		
 		let query_geofs = this.query_geofs;
 
@@ -193,7 +194,68 @@ SkyX.SkyXBase = function() {
 		};
 		a();
 	};
+
+
+	/*
+	Description:
+		downloads core.user.js if not saved in local storage, and loads it.
+
+	Parameters:
+		none
 	
+	Return values:
+		none
+	*/
+	this.first_update = function() {
+		if (this.query_version() === null) {
+
+			var src = localStorage.getItem("SkyX/defaultUpdateUrl") || DEFAULT_UPDATE_URL;
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+
+                    let coreContent = this.responseText;
+					
+                    eval(this.responseText);
+
+					// fetches the latest commit hash and saved it in memory as SkyX/version
+					// it id done inside of the callback function to handle the rare case that
+					// fetching core.user.js will succed, but fetching the commit hash won't
+					var commitHistoryUrl = 
+						"https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/" +
+						remoteBranch;
+					var xhttp2 = new XMLHttpRequest();
+					xhttp2.onreadystatehange = function() {
+						if(this.readyState == 4 && this.status == 200) {
+							var commitHash = this.responseText["sha"];
+							localStorage.setItem("SkyX/core.user.js", coreContent);
+							localStorage.setItem("SkyX/version", commitHash);
+						} else {
+							// TODO : Alert that an error occured
+						}
+					};
+
+                    xhttp2.open("GET", commitHistoryUrl, true);
+                    xhttp2.send();
+				} else {
+					// TODO : Alert that an error occured
+				}
+			};
+			xhttp.open("GET", src, true);
+			xhttp.send();
+			return true;
+		}
+		else {
+            var localContent = localStorage.getItem("SkyX/core.user.js");
+            if(localContent !== null) {
+                eval(localContent);
+            }
+			
+            return false;
+		}
+	};
+
 };
 
 /*
@@ -201,12 +263,14 @@ Description:
 	Main code of base.user.js
 */
 (function() {
-	
+
+	'use strict';
+
 	window.SkyXBase = new SkyX.SkyXBase();
 	window.SkyXDebug = new SkyX.Debugger();
-	
+
 	SkyXBase.wait_geofs(function(fs) {
-		// Do things after GeoFS is loaded.
+		SkyXBase.first_update();
 	});
-	
+
 })();

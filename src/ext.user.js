@@ -7,13 +7,22 @@
 	
 	ext.name = "My Awesome First Extension!";
 	ext.version = "0.1";
-	ext.id = "yotam.salmon@gmail.com/myfirstextension"; // You may just set up another id convention
-	ext.update_from = "https://skyx-extension.com/update.php?id=yotam.salmon@gmail.com/myfirstextension"; // Just a fake sample url
+	ext.author = "Yotam Salmon";
+	
+	// Can we use the github username and repo as an id ?
+	//ext.id = "yotam.salmon@gmail.com/myfirstextension"; // You may just set up another id convention
+	
+	// We know where we need to update from, from the github repo.
+	//ext.update_from = "https://skyx-extension.com/update.php?id=yotam.salmon@gmail.com/myfirstextension"; // Just a fake sample url
 	
 	ext.load = function(geofs, skyx) {
 		// For loading the extension
 	};
-	
+
+	ext.loop = function(geofs, skyx) {
+		// For performing a repetitive task 
+	};
+
 	ext.dispose = function(geofs, skyx) {
 		// For folding the extension
 	};
