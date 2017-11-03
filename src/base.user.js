@@ -17,6 +17,11 @@
 
 // TODO - Fix mistakes and change the method Base auto-updates
 
+// Affects what branch to pull from, dev or release.
+var isDebug = true;
+
+// The name of the branch to pull from
+let remoteBranch = (isDebug ? "dev" : "release");
 
 /*
 Description:
@@ -97,7 +102,8 @@ Description:
 */
 SkyX.SkyXBase = function() {
 
-	var DEFAULT_UPDATE_URL = "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/core.user.js";
+	var DEFAULT_UPDATE_URL = "https://rawgit.com/geofs-plugins/plugin-manager-V2/"
+		+ remoteBranch + "/src/core.user.js";
 	
 	/*
 	Description:
@@ -121,7 +127,7 @@ SkyX.SkyXBase = function() {
 	*/
 	this.update_version = function(ver) {
 		localStorage.setItem("SkyX/version", ver);
-	}
+	};
 	
 	/*
 	Description:
@@ -201,7 +207,7 @@ SkyX.SkyXBase = function() {
 		none
 	*/
 	this.first_update = function() {
-		if (this.query_version() == null) {
+		if (this.query_version() === null) {
 
 			var src = localStorage.getItem("SkyX/defaultUpdateUrl") || DEFAULT_UPDATE_URL;
 
@@ -216,7 +222,9 @@ SkyX.SkyXBase = function() {
 					// fetches the latest commit hash and saved it in memory as SkyX/version
 					// it id done inside of the callback function to handle the rare case that
 					// fetching core.user.js will succed, but fetching the commit hash won't
-					var commitHistoryUrl = "https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/dev";
+					var commitHistoryUrl = 
+						"https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/" +
+						remoteBranch;
 					var xhttp2 = new XMLHttpRequest();
 					xhttp2.onreadystatehange = function() {
 						if(this.readyState == 4 && this.status == 200) {
@@ -240,7 +248,7 @@ SkyX.SkyXBase = function() {
 		}
 		else {
             var localContent = localStorage.getItem("SkyX/core.user.js");
-            if(localContent != null) {
+            if(localContent !== null) {
                 eval(localContent);
             }
 			
