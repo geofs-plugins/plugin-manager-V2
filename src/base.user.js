@@ -18,7 +18,7 @@
 // TODO - Fix mistakes and change the method Base auto-updates
 
 // Affects what branch to pull from, dev or release.
-var isDebug = true;
+var isDebug = false;
 
 // The name of the branch to pull from
 let remoteBranch = (isDebug ? "dev" : "release");
