@@ -102,7 +102,7 @@ Description:
 */
 SkyX.SkyXBase = function() {
 
-	var DEFAULT_UPDATE_URL = "https://rawgit.com/geofs-plugins/plugin-manager-V2/"
+	var DEFAULT_UPDATE_URL = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/"
 		+ remoteBranch + "/src/core.user.js";
 	
 	/*

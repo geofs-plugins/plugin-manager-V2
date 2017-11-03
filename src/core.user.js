@@ -15,7 +15,7 @@ var isDebug = false;
 let remoteBranch = (isDebug ? "dev" : "release");
 
 // A link to the directory that contains all of the remote content
-let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/" + remoteBranch + "/src/";
+let remoteContentUrl = "https://cdn.rawgit.com/geofs-plugins/plugin-manager-V2/" + remoteBranch + "/src/";
 
 
 // waits for jQuery to load and then
