@@ -28,6 +28,10 @@ function waitForJquery(method) {
 		method();
 	} else {
 		console.log("jQuery not found trying again");
+		
+		// It's gonna be a complete success or a total failure
+		clearTimeout();
+
 		setTimeout(function() {
 			waitForJquery(method);
 		}, 50);
@@ -42,10 +46,9 @@ function notify(msg) {
 
 // debug messages
 function debug(msg) {
-console.log(msg);
+	console.log(msg);
 }
 
-// TODO : Fix this, see github issue
 // loads the ui from local storage
 // and inserts it into the page
 function loadUi() {
