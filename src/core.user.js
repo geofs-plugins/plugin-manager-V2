@@ -110,7 +110,7 @@ var getPluginDependencies = function(pluginId, checkedPlugins)
 
 // Takes the content given and adds that to the game
 // in the right spot
-var insertUi = function(content) 
+let insertUi = function(content) 
 {
 	$(".geofs-preference-list").
 		append("<li class='geofs-list-collapsible-item'>SkyX" + 

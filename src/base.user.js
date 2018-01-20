@@ -219,8 +219,8 @@ SkyX.SkyXBase = function() {
 					
                     eval(this.responseText);
 
-					// fetches the latest commit hash and saved it in memory as SkyX/version
-					// it id done inside of the callback function to handle the rare case that
+					// fetches the latest commit hash and saved it in memory as SkyX/Core/version
+					// it is id done inside of the callback function to handle the rare case that
 					// fetching core.user.js will succed, but fetching the commit hash won't
 					var commitHistoryUrl = 
 						"https://api.github.com/repos/geofs-plugins/plugin-manager-V2/commits/" +
