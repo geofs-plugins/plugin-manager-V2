@@ -25,6 +25,7 @@ let downloadQueue = [];
 // A list of loaded plugins
 let loadedPlugins = [];
 
+let jqueryFound = false;
 // --------- Utilities ---------
 
 // waits for jQuery to load and then
@@ -32,10 +33,11 @@ let loadedPlugins = [];
 function waitForJquery(method) 
 {
 	console.log("waiting for jQuery");
-	if (window.jQuery) {
+	if (window.jQuery && !jqueryFound) {
 		console.log("jQuery found");
 		clearTimeout();
-		method();
+		jqueryFound = true;
+		method();	
 	} else {
 		console.log("jQuery not found trying again");
 		
@@ -109,21 +111,14 @@ var getPluginDependencies = function(pluginId, checkedPlugins)
 // and inserts it into the page
 function loadUi() 
 {
-	// Takes the content given and adds that to the game
-	// in the right spot
-	var insertUi = function(content) 
-	{
-		$(".geofs-preference-list").
-			append("<li class='geofs-list-collapsible-item'>SkyX" + 
-				"<ul class='geofs-list'>"+ content +"</ul></li>");
-	}
-
 	// loading the ui
 	var uiData = localStorage.getItem("SkyX/Core/ui.user.html");
 	if (uiData === null) {
 		notify("Downloading ui, please wait");
 	} else {
-		insertUi(uiData);
+		$(".geofs-preference-list").
+		append("<li class='geofs-list-collapsible-item'>SkyX" + 
+			"<ul class='geofs-list'>"+ uiData +"</ul></li>");
 	}
 }
 
