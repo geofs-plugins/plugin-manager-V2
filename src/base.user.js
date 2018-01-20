@@ -118,7 +118,7 @@ SkyX.SkyXBase = function() {
 		undefined - localStorage is not supported (problem!)
 	*/
 	this.query_version = function() {
-		return window["localStorage"] && (localStorage.getItem("SkyX/version") || null);
+		return window["localStorage"] && (localStorage.getItem("SkyX/Core/version") || null);
 	};
 
 	/*
@@ -126,7 +126,7 @@ SkyX.SkyXBase = function() {
 		updates the core version number
 	*/
 	this.update_version = function(ver) {
-		localStorage.setItem("SkyX/version", ver);
+		localStorage.setItem("SkyX/Core/version", ver);
 	};
 	
 	/*
@@ -150,7 +150,7 @@ SkyX.SkyXBase = function() {
 		}
 		
 		// Retrieving the core code
-		return localStorage.getItem("SkyX/core.user.js") || null;
+		return localStorage.getItem("SkyX/Core/core.user.js") || null;
 	};
 	
 	/*
@@ -209,7 +209,7 @@ SkyX.SkyXBase = function() {
 	this.first_update = function() {
 		if (this.query_version() === null) {
 
-			var src = localStorage.getItem("SkyX/defaultUpdateUrl") || DEFAULT_UPDATE_URL;
+			var src = localStorage.getItem("SkyX/Core/defaultUpdateUrl") || DEFAULT_UPDATE_URL;
 
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -229,8 +229,8 @@ SkyX.SkyXBase = function() {
 					xhttp2.onreadystatehange = function() {
 						if(this.readyState == 4 && this.status == 200) {
 							var commitHash = this.responseText["sha"];
-							localStorage.setItem("SkyX/core.user.js", coreContent);
-							localStorage.setItem("SkyX/version", commitHash);
+							localStorage.setItem("SkyX/Core/core.user.js", coreContent);
+							localStorage.setItem("SkyX/Core/version", commitHash);
 						} else {
 							// TODO : Alert that an error occured
 						}
@@ -247,7 +247,7 @@ SkyX.SkyXBase = function() {
 			return true;
 		}
 		else {
-            var localContent = localStorage.getItem("SkyX/core.user.js");
+            var localContent = localStorage.getItem("SkyX/Core/core.user.js");
             if(localContent !== null) {
                 eval(localContent);
             }
