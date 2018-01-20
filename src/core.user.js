@@ -61,8 +61,6 @@ function debug(msg)
 	console.log(msg);
 }
 
-// --------- SkyX V2 Code ---------
-
 // A recursive method that fetches all of the plugin's dependencies
 // Returns null if some of the dependencies are missing
 var getPluginDependencies = function(pluginId, checkedPlugins)
@@ -104,6 +102,8 @@ var getPluginDependencies = function(pluginId, checkedPlugins)
 
 	return checkedPlugins;
 }
+
+// --------- Main Code Structure ---------
 
 // loads the ui from local storage
 // and inserts it into the page
@@ -370,6 +370,8 @@ function updateSelf()
 	});
 }
 
+// --------- Handling all of the main code ---------
+
 // main function
 // incharge of updating and loading the appropriate files
 function main() {
@@ -377,7 +379,7 @@ function main() {
 	if (typeof(Storage) !== "undefined") {
 		loadUi();
 
-		loadAvailablePlugins();
+		loadPlugins();
 
 		updatePlugins();
 
