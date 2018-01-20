@@ -10,10 +10,10 @@
 	ext.author = "Yotam Salmon";
 
 	// A list of local files (in the same github repo) that the extension requires
-	ext.localDependencies = [];
+	ext.localDependencies = ["core.user.js", "data/ui.user.html"];
 	
 	// A list of remote extensions that the extension requires
-	ext.remoteDependencies = [];
+	ext.remoteDependencies = ["geofs-plugins/plugin-manager", "geofs-plugins/voice-atc"];
 
 	// Can we use the github username and repo as an id ?
 	//ext.id = "yotam.salmon@gmail.com/myfirstextension"; // You may just set up another id convention
