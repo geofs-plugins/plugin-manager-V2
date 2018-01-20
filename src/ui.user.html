@@ -1,2 +1,21 @@
-Hello world from SkyX !
-Here will be the menu of SkyX plugin manager V2 !
+<script>
+    var pluginsList = localStorage.getItem("SkyX/Plugins/PluginsTable");
+    
+    for(var plugin in pluginsList)
+    {
+        $("#PluginsList").append(plugin + "</br>");    
+    }
+
+    $( "#AddPluginButton" ).click(function() {
+        alert("Plugin Added !");
+    });
+</script>
+
+<div id="PluginsList">
+</div>
+
+
+<div id="AddPluginForm">
+    <input type="text" id="PluginGithubIdInput"/>
+    <button id="AddPluginButton">Add Plugin</button>
+</div>
