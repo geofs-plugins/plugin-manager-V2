@@ -53,7 +53,7 @@ function debug(msg) {
 // and inserts it into the page
 function loadUi() {
 	// loading the ui
-	var uiData = localStorage.getItem("SkyX/ui.user.html");
+	var uiData = localStorage.getItem("SkyX/Core/ui.user.html");
 	if (uiData === null) {
 		notify("Downloading ui, please wait");
 	} else {
@@ -72,7 +72,7 @@ function insertUi(content) {
 // TODO : Implement this
 // loads the plugins from memory
 function loadPlugins() {
-
+	
 }
 
 // TODO : Implement this
@@ -113,7 +113,7 @@ function updateSelf() {
 
 							// deleting all of the files
 							for (var file in filesToUpdate) {
-								localStorage.setItem("SkyX/" + filesToUpdate[file], null);
+								localStorage.setItem("SkyX/Core/" + filesToUpdate[file], null);
 							}
 						} else {
 							localStorage.setItem("SkyX/version", latestRemoteCommitHash);
@@ -136,11 +136,11 @@ function updateSelf() {
 							debug("got " + filesToUpdate[file]);
 							// if the ui hasn't been loaded yet, and the current file is the ui file
 							// the load the content you just fetched.
-							if ((!("SkyX/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
+							if ((!("SkyX/Core/ui.user.html" in localStorage)) && filesToUpdate[file] == "ui.user.html") {
 								insertUi(data);
 							}
 
-							localStorage.setItem("SkyX/" + filesToUpdate[file], data);
+							localStorage.setItem("SkyX/Core/" + filesToUpdate[file], data);
 							filesFinished++;
 						},
 
@@ -164,7 +164,7 @@ function updateSelf() {
 // main function
 // incharge of updating and loading the appropriate files
 function main() {
-	//if this browser suppoprt Local Storage
+	// Checking if this browser suppoprt Local Storage
 	if (typeof(Storage) !== "undefined") {
 		loadUi();
 
