@@ -19,35 +19,7 @@ let remoteBranch = (isDebug ? "dev" : "release");
 // A link to the directory that contains all of the remote content
 let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/" + remoteBranch + "/src/";
 
-// If jquery has been found yet or not
-let jqueryFound = false;
-
 // --------- Utilities ---------
-
-// waits for jQuery to load and then
-// calls the callback function, passed as a parameter
-function waitForJquery(method) 
-{
-	if(!jqueryFound)
-	{
-		console.log("jquery found status : " + jqueryFound);
-		if (window.jQuery) {
-			console.log("jQuery found");
-			clearTimeout();
-			jqueryFound = true;
-			method();	
-		} else {
-			console.log("jQuery not found trying again");
-			
-			// It's gonna be a complete success or a total failure
-			clearTimeout();
-	
-			setTimeout(function() {
-				waitForJquery(method);
-			}, 50);
-		}
-	}
-}
 
 // tells the user a message
 function notify(msg) 
@@ -395,5 +367,10 @@ function main() {
 // main code
 (function() {
 	// waits for jQuery to load and then calls
-	waitForJquery(main);
+	var nTimer = setInterval(function() {
+		if (window.jQuery) {
+			clearInterval(nTimer);
+			main();
+		}
+	}, 100);
 })();
