@@ -19,13 +19,9 @@ let remoteBranch = (isDebug ? "dev" : "release");
 // A link to the directory that contains all of the remote content
 let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/" + remoteBranch + "/src/";
 
-// A temporary queue of plugins that need to be downlaoded
-let downloadQueue = [];
-
-// A list of loaded plugins
-let loadedPlugins = [];
-
+// If jquery has been found yet or not
 let jqueryFound = false;
+
 // --------- Utilities ---------
 
 // waits for jQuery to load and then
@@ -117,6 +113,122 @@ let insertUi = function(content)
 			"<ul class='geofs-list'>"+ content +"</ul></li>");
 }
 
+// Checks for newer version and downloads all of the required dependendencies
+// Does not handle failures well
+let updatePlugin = function(pluginId)
+{
+	let currentCommitHash = localStorage.getItem("SkyX/Plugins/PluginsTable")[pluginId];
+
+	// I know it's not pretty, but that's all we have got and you are gonna have to deal with it
+	// TODO : Add failure handlers
+	$.ajax(
+		{
+			url: "https://api.github.com/repos/geofs-plugins/" + pluginId + "/commits/release",
+			success: function(data)
+			{
+				let remoteCommitHash = data["sha"];
+
+				if(remoteCommitHash !== currentCommitHash)
+				{
+					//Guys , WE HAVE AN UPDATE !
+					
+					//Download the main file
+					$.ajax(
+						{
+							url: "https://rawgit.com/pluginId/release/src/main.js",
+							success: function(data)
+							{
+								// Save the data locally
+								localStorage.setItem("SkyX/Plugins/" + pluginId + "/main.js", data);
+
+								// Download all of the local dependencies
+								var pluginObject = eval(data)();
+								for (let file in pluginObject.localDependencies)
+								{
+									$.ajax(
+										{
+											url : "https://rawgit.com/pluginId/release/src/" + file,
+											success : function(data)
+											{
+												localStorage.setItem("SkyX/Plugins/" + pluginId + "/" + file, data);
+											},
+											error: function()
+											{
+												notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
+											}
+										}
+									);
+								}
+
+								// Pretty much done with this plugin, going on to other ones
+								// Update the plugins table with the new commit hash
+								var pluginsTable = localStorage.getItem("SkyX/Plugins/PluginsTable");
+								pluginsTable[pluginId] = remoteCommitHash;
+
+								// Download all of the remote dependencies
+								for(var dependency in pluginObject.remoteDependencies)
+								{
+									updatePlugin(dependency);
+								}
+							},
+							error: function()
+							{
+								notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
+							}
+						}
+					);
+				}
+			},
+			error: function()
+			{
+				notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
+			}
+		}
+	);
+};
+
+// A recursive method that fetches all of the plugin's dependencies
+// Returns null if some of the dependencies are missing
+var getPluginDependencies = function(pluginId, checkedPlugins)
+{
+	var pluginContent = localStorage.getItem("SkyX/Plugins/" + pluginId + "/main.js");
+	if (pluginContent === undefined)
+	{
+		return null;
+	}
+	else
+	{
+		checkedPlugins.push(pluginId);
+
+		var pluginObject = eval(pluginContent)();
+		for(var remoteDependency in pluginObject.remoteDependencies)
+		{
+			var isCheckedAlready = remoteDependency in checkedPlugins;
+			var hasValidDependencies = checkPlugin(checkedPlugins);
+
+			if(!isCheckedAlready && !hasValidDependencies)
+			{
+				return null;
+			}
+
+			if(isCheckedAlready)
+			{
+				// If the plugin already exists in the list than move it to be closer
+				// to the end as the last plugin is the first to be loaded
+				var index = checkedPlugins.indexOf(remoteDependency);
+				isCheckedAlready = checkedPlugins.splice(index, 1);
+				checkedPlugins.push(remoteDependency);
+			}
+			else
+			{
+				checkedPlugins.push(remoteDependency);
+			}
+		}
+	}
+
+	return checkedPlugins;
+}
+
 // --------- Main Code Structure ---------
 
 // loads the ui from local storage
@@ -135,48 +247,6 @@ function loadUi()
 // Loads the saved plugins and their dependencies
 function loadPlugins() 
 {
-	// A recursive method that fetches all of the plugin's dependencies
-	// Returns null if some of the dependencies are missing
-	var getPluginDependencies = function(pluginId, checkedPlugins)
-	{
-		var pluginContent = localStorage.getItem("SkyX/Plugins/" + pluginId + "/main.js");
-		if (pluginContent === undefined)
-		{
-			return null;
-		}
-		else
-		{
-			checkedPlugins.push(pluginId);
-
-			var pluginObject = eval(pluginContent)();
-			for(var remoteDependency in pluginObject.remoteDependencies)
-			{
-				var isCheckedAlready = remoteDependency in checkedPlugins;
-				var hasValidDependencies = checkPlugin(checkedPlugins);
-
-				if(!isCheckedAlready && !hasValidDependencies)
-				{
-					return null;
-				}
-
-				if(isCheckedAlready)
-				{
-					// If the plugin already exists in the list than move it to be closer
-					// to the end as the last plugin is the first to be loaded
-					var index = checkedPlugins.indexOf(remoteDependency);
-					isCheckedAlready = checkedPlugins.splice(index, 1);
-					checkedPlugins.push(remoteDependency);
-				}
-				else
-				{
-					checkedPlugins.push(remoteDependency);
-				}
-			}
-		}
-
-		return checkedPlugins;
-	}
-	
 	var pluginsTable = localStorage.getItem("SkyX/Plugins/PluginsTable");
 	for (var pluginId in pluginsTable)
 	{
@@ -218,80 +288,6 @@ function loadPlugins()
 // Updates/Downloads each on the plugins if necessery
 function updatePlugins() 
 {
-	// Checks for newer version and downloads all of the required dependendencies
-	// Does not handle failures well
-	var updatePlugin = function(pluginId)
-	{
-		let currentCommitHash = localStorage.getItem("SkyX/Plugins/PluginsTable")[pluginId];
-
-		// I know it's not pretty, but that's all we have got and you are gonna have to deal with it
-		// TODO : Add failure handlers
-		$.ajax(
-			{
-				url: "https://api.github.com/repos/geofs-plugins/" + pluginId + "/commits/release",
-				success: function(data)
-				{
-					let remoteCommitHash = data["sha"];
-
-					if(remoteCommitHash !== currentCommitHash)
-					{
-						//Guys , WE HAVE AN UPDATE !
-						
-						//Download the main file
-						$.ajax(
-							{
-								url: "https://rawgit.com/pluginId/release/src/main.js",
-								success: function(data)
-								{
-									// Save the data locally
-									localStorage.setItem("SkyX/Plugins/" + pluginId + "/main.js", data);
-
-									// Download all of the local dependencies
-									var pluginObject = eval(data)();
-									for (let file in pluginObject.localDependencies)
-									{
-										$.ajax(
-											{
-												url : "https://rawgit.com/pluginId/release/src/" + file,
-												success : function(data)
-												{
-													localStorage.setItem("SkyX/Plugins/" + pluginId + "/" + file, data);
-												},
-												error: function()
-												{
-													notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
-												}
-											}
-										);
-									}
-
-									// Pretty much done with this plugin, going on to other ones
-									// Update the plugins table with the new commit hash
-									var pluginsTable = localStorage.getItem("SkyX/Plugins/PluginsTable");
-									pluginsTable[pluginId] = remoteCommitHash;
-
-									// Download all of the remote dependencies
-									for(var dependency in pluginObject.remoteDependencies)
-									{
-										updatePlugin(dependency);
-									}
-								},
-								error: function()
-								{
-									notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
-								}
-							}
-						);
-					}
-				},
-				error: function()
-				{
-					notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
-				}
-			}
-		);
-	};
-
 	for (let pluginId in localStorage.getItem("SkyX/Plugins/PluginsTable"))
 	{
 		UpdatePlugin(pluginId);

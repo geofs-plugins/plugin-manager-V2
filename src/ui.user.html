@@ -7,7 +7,14 @@
     }
 
     $( "#AddPluginButton" ).click(function() {
-        alert("Plugin Added !");
+        var pluginId = $("#PluginGithubIdInput").text();
+        var pluginsList = localStorage.getItem("SkyX/Plugins/PluginsTable");
+        pluginsList[pluginId] = null;
+        localStorage.setItem("SkyX/Plugins/PluginsTable", pluginsList);
+
+        alert("Plugin Added, downloading...");
+
+        updatePlugin(pluginId);
     });
 </script>
 
