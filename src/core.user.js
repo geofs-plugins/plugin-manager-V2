@@ -204,6 +204,8 @@ function loadPlugins()
 						eval(fileContent);
 					}
 				}
+
+				loadingPluginObject.load(undefined, undefined);
 			}
 		}
 		else
