@@ -32,21 +32,24 @@ let jqueryFound = false;
 // calls the callback function, passed as a parameter
 function waitForJquery(method) 
 {
-	console.log("waiting for jQuery");
-	if (window.jQuery && !jqueryFound) {
-		console.log("jQuery found");
-		clearTimeout();
-		jqueryFound = true;
-		method();	
-	} else {
-		console.log("jQuery not found trying again");
-		
-		// It's gonna be a complete success or a total failure
-		clearTimeout();
-
-		setTimeout(function() {
-			waitForJquery(method);
-		}, 50);
+	if(!jqueryFound)
+	{
+		console.log("jquery found status : " + jqueryFound);
+		if (window.jQuery) {
+			console.log("jQuery found");
+			clearTimeout();
+			jqueryFound = true;
+			method();	
+		} else {
+			console.log("jQuery not found trying again");
+			
+			// It's gonna be a complete success or a total failure
+			clearTimeout();
+	
+			setTimeout(function() {
+				waitForJquery(method);
+			}, 50);
+		}
 	}
 }
 
@@ -105,6 +108,15 @@ var getPluginDependencies = function(pluginId, checkedPlugins)
 	return checkedPlugins;
 }
 
+// Takes the content given and adds that to the game
+// in the right spot
+var insertUi = function(content) 
+{
+	$(".geofs-preference-list").
+		append("<li class='geofs-list-collapsible-item'>SkyX" + 
+			"<ul class='geofs-list'>"+ content +"</ul></li>");
+}
+
 // --------- Main Code Structure ---------
 
 // loads the ui from local storage
@@ -116,9 +128,7 @@ function loadUi()
 	if (uiData === null) {
 		notify("Downloading ui, please wait");
 	} else {
-		$(".geofs-preference-list").
-		append("<li class='geofs-list-collapsible-item'>SkyX" + 
-			"<ul class='geofs-list'>"+ uiData +"</ul></li>");
+		insertUi(uiData);
 	}
 }
 
