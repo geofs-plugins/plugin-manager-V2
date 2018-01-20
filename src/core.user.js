@@ -79,7 +79,7 @@ var getPluginDependencies = function(pluginId, checkedPlugins)
 	{
 		checkedPlugins.push(pluginId);
 
-		var pluginObject = pluginContent();
+		var pluginObject = eval(pluginContent)();
 		for(var remoteDependency in pluginObject.remoteDependencies)
 		{
 			var isCheckedAlready = remoteDependency in checkedPlugins;
@@ -148,7 +148,7 @@ function loadPlugins()
 		{
 			checkedPlugins.push(pluginId);
 
-			var pluginObject = pluginContent();
+			var pluginObject = eval(pluginContent)();
 			for(var remoteDependency in pluginObject.remoteDependencies)
 			{
 				var isCheckedAlready = remoteDependency in checkedPlugins;
@@ -189,7 +189,7 @@ function loadPlugins()
 
 			for (loadingPluginId in toLoad)
 			{
-				var loadingPluginObject = localStorage.getItem("SkyX/Plugins/" + loadingPluginId + "/main.js")();
+				var loadingPluginObject = eval(localStorage.getItem("SkyX/Plugins/" + loadingPluginId + "/main.js"))();
 
 				// Eval each one of the plugin's files
 				for (var file in loadingPluginObject.localDependencies)
