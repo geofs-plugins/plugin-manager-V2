@@ -8,7 +8,13 @@
 	ext.name = "My Awesome First Extension!";
 	ext.version = "0.1";
 	ext.author = "Yotam Salmon";
+
+	// A list of local files (in the same github repo) that the extension requires
+	ext.localDependencies = [];
 	
+	// A list of remote extensions that the extension requires
+	ext.remoteDependencies = [];
+
 	// Can we use the github username and repo as an id ?
 	//ext.id = "yotam.salmon@gmail.com/myfirstextension"; // You may just set up another id convention
 	
