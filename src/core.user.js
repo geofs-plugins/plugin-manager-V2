@@ -34,48 +34,6 @@ function debug(msg)
 	console.log(msg);
 }
 
-// A recursive method that fetches all of the plugin's dependencies
-// Returns null if some of the dependencies are missing
-var getPluginDependencies = function(pluginId, checkedPlugins)
-{
-	var pluginContent = localStorage.getItem("SkyX/Plugins/" + pluginId + "/main.js");
-	if (pluginContent === undefined)
-	{
-		return null;
-	}
-	else
-	{
-		checkedPlugins.push(pluginId);
-
-		var pluginObject = eval(pluginContent)();
-		for(var remoteDependency in pluginObject.remoteDependencies)
-		{
-			var isCheckedAlready = remoteDependency in checkedPlugins;
-			var hasValidDependencies = checkPlugin(checkedPlugins);
-
-			if(!isCheckedAlready && !hasValidDependencies)
-			{
-				return null;
-			}
-
-			if(isCheckedAlready)
-			{
-				// If the plugin already exists in the list than move it to be closer
-				// to the end as the last plugin is the first to be loaded
-				var index = checkedPlugins.indexOf(remoteDependency);
-				isCheckedAlready = checkedPlugins.splice(index, 1);
-				checkedPlugins.push(remoteDependency);
-			}
-			else
-			{
-				checkedPlugins.push(remoteDependency);
-			}
-		}
-	}
-
-	return checkedPlugins;
-}
-
 // Takes the content given and adds that to the game
 // in the right spot
 let insertUi = function(content) 
@@ -223,7 +181,7 @@ function loadPlugins()
 	for (var pluginId in pluginsTable)
 	{
 		// A list of plugins to load for this specified plugin
-		var toLoad = getPluginDependencies(pluginId);
+		var toLoad = getPluginDependencies(pluginId, []);
 		if (toLoad !== null)
 		{
 			// A list of plugins to load, dependencies first
