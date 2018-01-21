@@ -130,8 +130,12 @@ var getPluginDependencies = function(pluginId, checkedPlugins)
 	{
 		checkedPlugins.push(pluginId);
 
+		console.log(pluginContent);
+
 		var pluginObject = eval(pluginContent);
+		
 		console.log(pluginObject);
+		
 		for(var remoteDependency in pluginObject.remoteDependencies)
 		{
 			var isCheckedAlready = remoteDependency in checkedPlugins;
