@@ -122,8 +122,9 @@ let updatePlugin = function(pluginId)
 var getPluginDependencies = function(pluginId, checkedPlugins)
 {
 	var pluginContent = localStorage.getItem("SkyX/Plugins/" + pluginId + "/main.js");
-	if (pluginContent === undefined)
+	if (pluginContent === undefined || pluginContent === null)
 	{
+		console.log("Plugin content is empty, cannot evaluate");
 		return null;
 	}
 	else
