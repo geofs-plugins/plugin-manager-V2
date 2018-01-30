@@ -17,6 +17,8 @@ class DebugServer_Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
         if (self.path == "/hash/"):
+            # TODO : Make this random generated
+            #        Check how to generate random hashes
             data = "160bdc886647813db6b9115d7414dd597113c958"
             self.wfile.write(bytes(data, "utf8"))
             return
