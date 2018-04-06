@@ -22,7 +22,7 @@ let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/" + r
 // --------- Utilities ---------
 
 // Initialising the utilities 'namespace'
-var window.SkyX.Utilities = {};
+window.SkyX.Utilities = {};
 
 // Just to disambiguate.
 SkyX = window.SkyX;
