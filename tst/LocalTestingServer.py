@@ -3,6 +3,8 @@
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+import random
+import sys
 
 # HTTPRequestHandler class
 class DebugServer_Handler(BaseHTTPRequestHandler):
@@ -19,14 +21,19 @@ class DebugServer_Handler(BaseHTTPRequestHandler):
         if (self.path == "/hash/"):
             # TODO : Make this random generated
             #        Check how to generate random hashes
-            data = "160bdc886647813db6b9115d7414dd597113c958"
+            data = str(random.getrandbits(128))
             self.wfile.write(bytes(data, "utf8"))
+            return
+        elif (self.path == "/stop/"):
+            sys,exit(0)
             return
         elif (self.path[:5] == "/src/"):
             requested_file = self.path[5:]
             running_directory = os.getcwd()
             
             # Testing if the script is run from the tst folder
+            print(running_directory.split('\\')[-1])
+
             if( running_directory[-4:] != "\\tst"):
                 # BUG : Not detecting correctly
                 self.wfile.write(bytes("Not running in correct directory, please run in tst folder", "utf8"))

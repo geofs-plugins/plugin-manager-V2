@@ -2,10 +2,10 @@
 // @name            SkyX V2
 // @author          Yotam Salmon & Ron Popov
 // @namespace       GeoFS-plugins
-// @version         0.0.1
+// @version         0.1
 // @description     Adds additional content to Geo-FS
-// @match           http://geo-fs.com/geofs.php*
-// @match           http://www.geo-fs.com/geofs.php*
+// @match           https://geo-fs.com/geofs.php*
+// @match           https://www.geo-fs.com/geofs.php*
 // @grant       none
 // ==/UserScript==
 
@@ -19,14 +19,14 @@
 
 // Affects what method this will query the version and update from.
 var isDebug = true;
+
 (function() {
 	var on_download_latest_version_success = function(req) {
 		var el = document.createElement("script");
 		el.innerHTML = req.responseText;
 		document.head.appendChild(el);
-		localStorage.setItem("skyx_core", el.innerText);
-		localStorage.setItem("skyx_first", true);
-	}
+		localStorage.setItem("SkyX/Core/core.user.js", el.innerText);
+	};
 
 	var download_latest_version = function() {
 		var req = new XMLHttpRequest();
@@ -34,10 +34,19 @@ var isDebug = true;
 			if (this.readyState == 4 && this.status == 200) {
 				on_download_latest_version_success(req);
 			}
+		};
+
+		if (isDebug)
+		{
+			req.open("GET", "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/core.user.js", "true");
+			req.send();
 		}
-		req.open("GET", "https://rawgit.com/geofs-plugins/plugin-manager-V2/release/release/core.user.js", "true");
-		req.send();
-	}
+		else
+		{
+			req.open("GET", "https://rawgit.com/geofs-plugins/plugin-manager-V2/release/src/core.user.js", "true");
+			req.send();
+		}
+	};
 	
 	console.log("SkyX base loader has been loaded");
 	
@@ -45,12 +54,12 @@ var isDebug = true;
 		consolw.log("SkyX could not locate the localStorage object. Seems like this browser is not supported");
 	}
 	
-	var core_exists = localStorage.getItem("skyx_first") == "true";
+	var core_exists = localStorage.getItem("SkyX/Core/core.user.js") !== null;
 	
 	if (core_exists) {
 		console.log("SkyX base, loading the existing core.user.js file locally.");
 		var el = document.createElement("script");
-		el.innerHTML = localStorage.getItem("skyx_core");
+		el.innerHTML = localStorage.getItem("SkyX/Core/core.user.js");
 		document.head.appendChild(el);
 	}
 	else {
