@@ -21,18 +21,27 @@ let remoteContentUrl = "https://rawgit.com/geofs-plugins/plugin-manager-V2/" + r
 
 // --------- Utilities ---------
 
-// tells the user a message
-function notify(msg) 
+// Initialising the utilities 'namespace'
+window.SkyX.Utilities = {};
+
+// Just to disambiguate.
+SkyX = window.SkyX;
+
+// Tells the user a message
+SkyX.Utilities.Notify = function(msg) 
 {
 	// TODO : Implement
 	alert("Notifications : " + msg);
 }
 
-// debug messages
-function debug(msg) 
+// Debug messages
+SkyX.Utilities.Debug = function(msg) 
 {
 	console.log(msg);
 }
+
+// And for shortening the code I just made longer:
+var debug = SkyX.Utilities.Debug;
 
 // Takes the content given and adds that to the game
 // in the right spot
@@ -84,7 +93,7 @@ let updatePlugin = function(pluginId)
 											},
 											error: function()
 											{
-												notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
+												SkyX.Utilities.Notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
 											}
 										}
 									);
@@ -103,7 +112,7 @@ let updatePlugin = function(pluginId)
 							},
 							error: function()
 							{
-								notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
+								SkyX.Utilities.Notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
 							}
 						}
 					);
@@ -111,7 +120,7 @@ let updatePlugin = function(pluginId)
 			},
 			error: function()
 			{
-				notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
+				SkyX.Utilities.Notify("An error occured while updating " + pluginId + ", please contant the plugin developer");
 			}
 		}
 	);
