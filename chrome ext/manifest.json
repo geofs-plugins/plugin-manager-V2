@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+
+  "name": "SkyX 2.0 plugin for GeoFS",
+  "description": "A plugin for the GeoFS flight simulator, adding more planes, features and buildings to the game.",
+  "version": "0.1.0",
+  "icons": {
+	  "32": "image/logo_32.png"
+  },
+  
+  "browser_action": {
+    "default_icon": "image/logo_19.png",
+    "default_popup": "popup.html",
+	  "default_title": "SkyX 2.0 plugin"
+  },
+  
+  "author": "Yotam Salmon",
+  "background": {
+	  "persistent": false,
+    "scripts": ["background.js"]
+  },
+  
+  "incognito": "not_allowed",
+  
+  "permissions": [
+    "activeTab",
+    "webNavigation", 
+    "https://*.geo-fs.com/*",
+    "tabs"
+  ]
+} 
