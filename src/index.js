@@ -1,6 +1,6 @@
 
 const ResourceLoader = function() {
-    
+
     const _makescript = function(url) {
         var el = document.createElement("script");
         el.type = "text/javascript";
@@ -46,4 +46,24 @@ const ResourceLoader = function() {
         });
     };
 
+    this.waitfor = function() {
+        return new Promise((resolve, reject) => {
+            var tasks = [...arguments];
+            var x = setInterval(() => {
+                for (var a of tasks) {
+                    if (!eval("window." + a))
+                        return;
+                }
+
+                clearInterval(x);
+                resolve();
+            }, 10);
+        });
+    }
+
 };
+
+window.skyx = {};
+window.skyx.loader = new ResourceLoader();
+window.require = window.skyx.loader.require;
+window.waitfor = window.skyx.loader.waitfor;
