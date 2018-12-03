@@ -29,13 +29,10 @@ const ResourceLoader = function() {
     this.require = function() {
         return new Promise((resolve, reject) => {
             tasks = [...arguments];
-            console.log(tasks);
-
             for (var task of tasks) {
                 _require(task)
                     .then((url) => {
                         var index = tasks.indexOf(url);
-                        console.log(index);
                         if (index != -1)
                             tasks[index] = null;
                         
@@ -67,3 +64,18 @@ window.skyx = {};
 window.skyx.loader = new ResourceLoader();
 window.require = window.skyx.loader.require;
 window.waitfor = window.skyx.loader.waitfor;
+
+function main() {
+    console.log("Everything is loaded");
+}
+
+require(
+    "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css", // Materialize
+    "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
+).then(() => {
+    waitfor(
+        "$"
+    ).then(() => {
+        main();
+    })
+});
