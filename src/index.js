@@ -168,7 +168,8 @@ function ModifyAircraft() {
                         }
                         // Hotfix!
                         for (var inst in d.instruments) if (d.instruments.hasOwnProperty(inst)) {
-                            if (d.instruments[inst].constructor.name === "Object" && !d.instruments[inst].position) {
+                            console.log(inst, d.instruments[inst]);
+                            if (d.instruments[inst].constructor.name === "Object" && !d.instruments[inst].position && inst === "pfd") {
                                 delete d.instruments[inst];
                             }
                         }
@@ -436,10 +437,10 @@ const AircraftMenu = function(obj) {
     for (var ac of obj.items) {
         (function(aircraft) {
             aircraftMenu.container.append($("<button></button>", {
-                text: ac.name + " (by " + ac.author + ")",
+                text: aircraft.name + " (by " + aircraft.author + ")",
                 class: "ui button",
                 css: {width: "100%", marginTop: "5px"},
-                click: function() { geofs.aircraft.instance.change("skyx" + ac.id); }
+                click: function() { geofs.aircraft.instance.change("skyx" + aircraft.id); }
             }));
         })(ac);
     }
@@ -584,6 +585,12 @@ function InitOptions() {
 
 function ShowWelcome() {
     const WELCOME_VERSION = "0.1"; // TODO: Write code to show welcome only once
+
+    if (localStorage.getItem("skyx__welcome_version") == WELCOME_VERSION) {
+        return;
+    }
+
+    localStorage.setItem("skyx__welcome_version", WELCOME_VERSION);
 
     if (true) {
         new FullscreenModal(
