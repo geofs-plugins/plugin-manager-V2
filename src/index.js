@@ -330,6 +330,13 @@ const Aircraft = [
             {id: 334, name: "EL AL Israeli Airlins", author: "Yotam Salmon"},
             {id: 335, name: "Alitalia", author: "Yotam Salmon"},
             {id: 336, name: "ANA", author: "Yotam Salmon"},
+            {id: 337, name: "Asiana Airlines", author: "Yotam Salmon"},
+        ]
+    },
+    {
+        title: "Airbus A321",
+        items: [
+            {id: 339, name: "Etihad Airways", author: "Alta Aviation"}
         ]
     },
     {
@@ -339,18 +346,22 @@ const Aircraft = [
             {id: 322, name: "KLM Royal Dutch Airlines", author: "Yotam Salmon"},
             {id: 323, name: "British Airways", author: "Yotam Salmon"},
             {id: 325, name: "Delta Airlines", author: "Yotam Salmon"},
-            {id: 324, name: "United Airlines", author: "Yotam Salmon"}
+            {id: 324, name: "United Airlines", author: "Yotam Salmon"},
+            {id: 338, name: "RyanAir Santa Livery", author: "Yotam Salmon"}
         ]
     },
     {
         title: "Airbus A380-800",
         items: [
-            {id: 1002, name: "ANA", author: "Dylan Cleary"},
             {id: 329, name: "Korean Air", author: "Yotam Salmon"},
             {id: 330, name: "British Airways", author: "Yotam Salmon"},
             {id: 332, name: "Qatar Airways", author: "Yotam Salmon"},
             {id: 328, name: "Emirates", author: "Yotam Salmon"},
             {id: 333, name: "Dubai One", author: "Coolstar"},
+            {id: 1002, name: "ANA", author: "Dylan Cleary"},
+            {id: 1005, name: "Etihad Airways", author: "Dylan Cleary"},
+            {id: 1006, name: "HiFly Coral Reefs Livery", author: "Dylan Cleary"},
+            {id: 1007, name: "Lufthansa", author: "Dylan Cleary"},
         ]
     },
 ];
