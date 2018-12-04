@@ -445,6 +445,109 @@ const AircraftMenu = function(obj) {
     }
 }
 
+const VoiceChannel = function() {
+    var webrtc;
+
+    var audioDOM = $("<div></div>", {
+        css: {display: "none"},
+        class: "audio-dom"
+    });
+
+    var self_audio_id = "audioDom_" + new Date().valueOf();
+    audioDOM.append($("<audio></audio>").attr({
+        controls: true,
+        oncontextmenu: "return false;",
+        volume: 0,
+        disabled: true,
+        id: self_audio_id
+    }));
+    
+    var remote_audio_id = "audioDom_" + new Date().valueOf();
+    audioDOM.append($("<div></div>", {
+        id: remote_audio_id
+    }));
+
+    $("body").append(audioDOM);
+
+    this.connected = false;
+    this.muted = true;
+    this.talkie = $("<div></div>").html(`
+    <div style="position: fixed; z-index: 1000; background-color: whitesmoke; opacity: 0.75; top: 0; left: 0; margin: 20px; padding: 7px; border-radius: 5px;">
+        <div style="line-height: 100%; width: 15px; height: 15px; background-color: #c00; border-radius: 10px; display: inline-block; margin-right: 10px;">
+            &nbsp;
+        </div>
+        Talking
+    </div>
+    `).hide();
+    $("body").append(this.talkie);
+
+    this.webrtc = () => {
+        return webrtc;
+    };
+
+    this.connect = () => {
+
+        if (webrtc) {
+            this.joinroom();
+        }
+
+        webrtc = new SimpleWebRTC({
+            localVideoEl: self_audio_id,
+            remoteVideosEl: remote_audio_id,
+            autoRequestMedia: true,
+            enableDataChannels: true,
+            media: {
+                audio: true,
+                video: false
+            }
+        });
+
+        webrtc.on("readyToCall", () => {
+            this.joinroom();
+        });
+    };
+
+    this.joinroom = () => {
+        webrtc.joinRoom("geofs-voice-chat", (err, res) => {
+            if (err) {
+                console.log("WebRTC Error");
+                return;
+            }
+            webrtc.mute();
+            this.muted = true;
+            console.log("WebRTC connected");
+            alertify.notify("Connected to in-game voice chat");
+            this.connected = true;
+        });
+    };
+
+    this.disconnect = () => {
+        if (webrtc) {
+            webrtc.leaveRoom();
+            this.connected = false;
+            alertify.notify("Disconnected from voice chat");
+        }
+    }
+
+    $("body").keydown((e) => {
+        if (e.which == 81 && this.connected) {
+            if (this.muted) {
+                webrtc.unmute();
+                this.muted = false;
+                this.talkie.show();
+            }
+        }
+    }).keyup((e) => {
+        if (e.which == 81 && this.connected) {
+            if (!this.muted) {
+                webrtc.mute();
+                this.muted = true;
+                this.talkie.hide();
+            }
+        }
+    });;
+}
+
 function GenerateAircraftMenu() {
     for (var family of Aircraft) {
         new AircraftMenu(family);
@@ -566,20 +669,51 @@ function InitOptions() {
         backgroundColor: "royalblue",
         color: "white"
     });
-    options.container.html(
-        `
-        <div class="ui cards">
-            <div class="card" style="background-color: royalblue">
-                <div class="content">
-                    <strong>Hey there!</strong><br/><br/>
-                    SkyX  doesn't have a proper settings page yet. However, you're invited to press F to pay respects to the authors.<br/><br/>
-                    Have a nice day,<br/>SkyX Team.
+    // options.container.html(
+    //     `
+    //     <div class="ui cards">
+    //         <div class="card" style="background-color: royalblue">
+    //             <div class="content">
+    //                 <strong>Hey there!</strong><br/><br/>
+    //                 SkyX  doesn't have a proper settings page yet. However, you're invited to press F to pay respects to the authors.<br/><br/>
+    //                 Have a nice day,<br/>SkyX Team.
+    //             </div>
+    //         </div>
+    //     </div>
+    //     <br/>
+    //     `
+    // )
+
+    options.container.append(
+        $("<div></div>").html(
+            `
+            <div class="ui cards">
+                <div class="card" style="background-color: whitesmoke">
+                    <div class="content">
+                        <div class="header">
+                            Voice Chat
+                        </div>
+                        <br/>
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" name="public" id="voicechat-toggler">
+                            <label>Enable in-game voice chat</label>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <br/>
-        `
-    )
+            <br/>
+            `
+        )
+    );
+
+    $("#voicechat-toggler").change(function() {
+        if (this.checked) {
+            window.voice.connect();
+        }
+        else {
+            window.voice.disconnect();
+        }
+    });
 }
 
 function ShowWelcome() {
@@ -650,6 +784,10 @@ function ShowWelcome() {
     }
 }
 
+function InitVoiceChat() {
+    window.voice = new VoiceChannel();
+}
+
 window.skyx = {};
 window.skyx.loader = new ResourceLoader();
 window.require = window.skyx.loader.require;
@@ -669,6 +807,8 @@ function main() {
     console.log("Everything is loaded");
 
     InitOptions();
+    InitVoiceChat();
+
     ShowWelcome();
 }
 
@@ -683,7 +823,8 @@ waitfor(
         "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js",
         "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js",
         "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css",
-        "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css"
+        "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css",
+        "https://drive.google.com/uc?export=view&id=1j1cZTuChJLGiwsbbpzorjfF6aIYnAFk3#.js"
     ).then(() => {
         main();
     })
