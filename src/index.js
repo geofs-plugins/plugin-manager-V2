@@ -60,18 +60,18 @@ const ResourceLoader = function() {
 
 };
 
-const OptionsView = function(title) {
+const OptionsView = function(title, addto = ".geofs-preference-list", action="append", containerType="div") {
     this.rootElement = $("<li></li>", {
         class: "geofs-list-collapsible-item geofs-preference-controls",
         text: title
     });
 
-    this.container = $("<div></div>", {
+    this.container = $("<%s></%s>".replace(/\%s/g, containerType), {
         class: "geofs-collapsible"
     });
 
     this.rootElement.append(this.container);
-    $(".geofs-preference-list").append(this.rootElement); // Appending ourselves into the options panel.
+    $(addto)[action](this.rootElement); // Appending ourselves into the options panel.
 
 }
 
@@ -110,7 +110,14 @@ function ModifyAircraft() {
                                 geofs.aircraft.instance.aircraftRecord.fullPath = geofs.url + geofs.aircraft.instance.aircraftRecord.fullPath;
                             }
                         }
+                        // Hotfix!
+                        for (var inst in d.instruments) if (d.instruments.hasOwnProperty(inst)) {
+                            if (d.instruments[inst].constructor.name === "Object" && !d.instruments[inst].position) {
+                                delete d.instruments[inst];
+                            }
+                        }
                         geofs.aircraft.instance.id = a;
+                        geofs.aircraft.instance.raw = d;
                         geofs.aircraft.instance.init(d, b, c);
 
                         if (isExternal) {
@@ -259,7 +266,7 @@ function ModifyAircraft() {
                     },
                     dataType: "text",
                     success: function(b, c) {
-                        geofs.aircraftList[a].local && (b = JSON.stringify({
+                        geofs.aircraftList[a] && geofs.aircraftList[a].local && (b = JSON.stringify({
                             id: a,
                             name: geofs.aircraftList[a].name,
                             fullPath: geofs.aircraftList[a].path,
@@ -302,6 +309,78 @@ function ModifyAircraft() {
     if (geofs.preferences.real_aircraft)
         geofs.aircraft.instance.change("skyx" + geofs.preferences.real_aircraft);
 }
+
+const Aircraft = [
+    {
+        title: "Bombardier CRJ-900",
+        items: [
+            {id: 301, name: "Hawaiian Airlines", author: "Alta Aviation"},
+            {id: 319, name: "Lufthansa Regional", author: "Yotam Salmon"}
+        ]
+    },
+    {
+        title: "Bombardier Dash 8 Q-400",
+        items: [
+            {id: 320, name: "King Solomon Airlines", author: "\"unknown\""}
+        ]
+    },
+    {
+        title: "Boeing 777-700 Low Quality",
+        items: [
+            {id: 334, name: "EL AL Israeli Airlins", author: "Yotam Salmon"},
+            {id: 335, name: "Alitalia", author: "Yotam Salmon"},
+            {id: 336, name: "ANA", author: "Yotam Salmon"},
+        ]
+    },
+    {
+        title: "Boeing 737-800",
+        items: [
+            {id: 321, name: "American Airlines", author: "Yotam Salmon"},
+            {id: 322, name: "KLM Royal Dutch Airlines", author: "Yotam Salmon"},
+            {id: 323, name: "British Airways", author: "Yotam Salmon"},
+            {id: 325, name: "Delta Airlines", author: "Yotam Salmon"},
+            {id: 324, name: "United Airlines", author: "Yotam Salmon"}
+        ]
+    },
+    {
+        title: "Airbus A380-800",
+        items: [
+            {id: 1002, name: "ANA", author: "Dylan Cleary"},
+            {id: 329, name: "Korean Air", author: "Yotam Salmon"},
+            {id: 330, name: "British Airways", author: "Yotam Salmon"},
+            {id: 332, name: "Qatar Airways", author: "Yotam Salmon"},
+            {id: 328, name: "Emirates", author: "Yotam Salmon"},
+            {id: 333, name: "Dubai One", author: "Coolstar"},
+        ]
+    },
+];
+
+const AircraftMenu = function(obj) {
+    var aircraftMenu = new OptionsView(obj.title, ".geofs-aircraft-list", "prepend");
+    aircraftMenu.rootElement.css({
+        backgroundColor: "royalblue",
+        color: "white",
+        fontWeight: "bold"
+    });
+
+    for (var ac of obj.items) {
+        (function(aircraft) {
+            aircraftMenu.container.append($("<button></button>", {
+                text: ac.name + " (by " + ac.author + ")",
+                class: "ui button",
+                css: {width: "100%", marginTop: "5px"},
+                click: function() { geofs.aircraft.instance.change("skyx" + ac.id); }
+            }));
+        })(ac);
+    }
+}
+
+function GenerateAircraftMenu() {
+    for (var family of Aircraft) {
+        new AircraftMenu(family);
+    }
+}
+
 
 function ModifyMultiplayer() {
     multiplayer.sendUpdate = function() {
@@ -440,8 +519,12 @@ window.waitfor = window.skyx.loader.waitfor;
 
 function core() {
     console.log("Core features have loaded");
+
     ModifyAircraft();
+    GenerateAircraftMenu();
+
     ModifyMultiplayer();
+    
     FlatEarth();
 }
 
