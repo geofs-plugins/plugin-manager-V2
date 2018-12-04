@@ -58,6 +58,8 @@ const ResourceLoader = function() {
         });
     }
 
+    return this;
+
 };
 
 const OptionsView = function(title, addto = ".geofs-preference-list", action="append", containerType="div") {
@@ -73,7 +75,59 @@ const OptionsView = function(title, addto = ".geofs-preference-list", action="ap
     this.rootElement.append(this.container);
     $(addto)[action](this.rootElement); // Appending ourselves into the options panel.
 
+    return this;
 }
+
+const FullscreenModal = function(icon, title, body, footer) {
+
+    this.uniqueId = "_modal" +  new Date().valueOf();
+
+    this.rootElement = $("<div></div>", {
+        class: "ui basic modal",
+        id: this.uniqueId
+    });
+
+    this.iconHeader = $("<div></div>", {
+        class: "ui icon header",
+        text: title
+    });
+
+    this.iconI = $("<i></i>", {
+        class: icon + " icon"
+    });
+
+    this.container = $("<div></div>", {
+        class: "content",
+        html: body
+    });
+
+    this.footer = $("<div></div>", {
+        class: "actions",
+        html: footer
+    });
+
+    this.iconHeader.prepend(this.iconI);
+    this.rootElement.append(this.iconHeader);
+    this.rootElement.append(this.container);
+    this.rootElement.append(this.footer);
+    
+    $("body").append(this.rootElement);
+
+    this.open = function(resolve, reject) {
+        this.resolve = resolve;
+        this.reject = reject;
+
+        $("#" + this.uniqueId).modal({
+            closable: false,
+            onApprove: resolve,
+            onDeny: reject
+        });
+
+        $("#" + this.uniqueId).modal("show");
+    }
+
+    return this;
+};
 
 function ModifyAircraft() {
     geofs.aircraft.Aircraft.prototype.load = function(a, b, c) {
@@ -521,6 +575,14 @@ function InitOptions() {
         <br/>
         `
     )
+}
+
+function ShowWelcome() {
+    const WELCOME_VERSION = "0.1"; // TODO: Write code to show welcome only once
+
+    if (true) {
+        
+    }
 }
 
 window.skyx = {};
