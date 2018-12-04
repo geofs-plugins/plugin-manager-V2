@@ -84,7 +84,8 @@ const FullscreenModal = function(icon, title, body, footer) {
 
     this.rootElement = $("<div></div>", {
         class: "ui basic modal",
-        id: this.uniqueId
+        id: this.uniqueId,
+        css: { fontSize: "1.4rem" }
     });
 
     this.iconHeader = $("<div></div>", {
@@ -122,6 +123,7 @@ const FullscreenModal = function(icon, title, body, footer) {
             onApprove: resolve,
             onDeny: reject
         });
+        $(".dimmer").css({backgroundColor: "rgba(0,0,0,0.6)"})
 
         $("#" + this.uniqueId).modal("show");
     }
@@ -181,6 +183,9 @@ function ModifyAircraft() {
                                 geofs.preferences.aircraft = 1;
 
                             geofs.preferences.real_aircraft = geofs.aircraft.instance.aircraftRecord.id;
+                        }
+                        else {
+                            geofs.preferences.real_aircraft = "";
                         }
                     }
                 } else
@@ -581,7 +586,60 @@ function ShowWelcome() {
     const WELCOME_VERSION = "0.1"; // TODO: Write code to show welcome only once
 
     if (true) {
-        
+        new FullscreenModal(
+            "star", "Welcome to SkyX 2.0!",
+            `Welcome aboard the new SkyX for GeoFS! We hope you're just excited as we are. Let us introduce you to some of our new features here...
+            <br/><br/>Don't worry, we still don't have that many.`,
+            `<div class="ui green ok inverted button">
+            <i class="checkmark icon"></i>
+            Let's do that!
+            </div>`
+        ).open(function() {
+            setTimeout(() => ui.panel.toggle(".geofs-aircraft-list"), 1000);
+            new FullscreenModal(
+                "plane", "Aircraft Warehouse",
+                `We have re-designed our Aircraft tab, adding more planes and more liveries (thanks to our contributors!)<br/>
+                You can now enjoy much more planes in an organized and clean menu.<br/><br/>`,
+                `<div class="ui green ok inverted button">
+                <i class="checkmark icon"></i>
+                Continue
+                </div>`
+            ).open(function() {
+                ui.panel.toggle(".geofs-aircraft-list");
+                new FullscreenModal(
+                    "image", "Terrain Flattener",
+                    `Just like the old SkyX, SkyX 2.0 also has a flat terrain option. If a bumpy runway bothers you too much, simply press Ctrl+Y to toggle flat terrain.<br/><br/>
+                    Do not confuse with flat Earth, which we (like science) do not support.`,
+                    `<div class="ui green ok inverted button">
+                    <i class="checkmark icon"></i>
+                    Cool!
+                    </div>`
+                ).open(function() {
+                    new FullscreenModal(
+                        "facebook", "Do you like SkyX?",
+                        `If you enjoy your time with SkyX, please help us get to more people by posting in-game pictures, 
+                        videos, etc on your favourite social networks such as Facebook or Discord.<br/><br/>
+                        Are you ready to play?`,
+                        `<div class="ui green ok inverted button">
+                        <i class="checkmark icon"></i>
+                        I'm ready!
+                        </div>`
+                    ).open(function() {
+                        new FullscreenModal(
+                            "angellist", "Let's play",
+                            `Ok, we're ready to play. See you again soon!<br/><br/>SkyX Team.`,
+                            `<div class="ui blue ok inverted button">
+                            <i class="checkmark icon"></i>
+                            Finish Tutorial
+                            </div>`
+                        ).open(function() {
+                            alertify.notify("You have been equipped with a Lufthansa A380", "success", 5);
+                            geofs.aircraft.instance.change("skyx1007");
+                        });
+                    })
+                })
+            });
+        });
     }
 }
 
@@ -598,12 +656,13 @@ function core() {
 
     ModifyMultiplayer();
     
-    FlatEarth();
-}
+    FlatEarth();}
 
 function main() {
     console.log("Everything is loaded");
+
     InitOptions();
+    ShowWelcome();
 }
 
 waitfor(
@@ -614,7 +673,10 @@ waitfor(
     core();
     require(
         "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css",
-        "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+        "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js",
+        "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js",
+        "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css",
+        "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css"
     ).then(() => {
         main();
     })
