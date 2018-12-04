@@ -60,6 +60,21 @@ const ResourceLoader = function() {
 
 };
 
+const OptionsView = function(title) {
+    this.rootElement = $("<li></li>", {
+        class: "geofs-list-collapsible-item geofs-preference-controls",
+        text: title
+    });
+
+    this.container = $("<div></div>", {
+        class: "geofs-collapsible"
+    });
+
+    this.rootElement.append(this.container);
+    $(".geofs-preference-list").append(this.rootElement); // Appending ourselves into the options panel.
+
+}
+
 function ModifyAircraft() {
     geofs.aircraft.Aircraft.prototype.load = function(a, b, c) {
         var isExternal = a.toString().indexOf("skyx") == 0;
@@ -396,16 +411,43 @@ function FlatEarth() {
     }, false);
 }
 
+function InitOptions() {
+    var options = new OptionsView("SkyX");
+    options.rootElement.css({
+        backgroundColor: "royalblue",
+        color: "white"
+    });
+    options.container.html(
+        `
+        <div class="ui cards">
+            <div class="card" style="background-color: royalblue">
+                <div class="content">
+                    <strong>Hey there!</strong><br/><br/>
+                    SkyX  doesn't have a proper settings page yet. However, you're invited to press F to pay respects to the authors.<br/><br/>
+                    Have a nice day,<br/>SkyX Team.
+                </div>
+            </div>
+        </div>
+        <br/>
+        `
+    )
+}
+
 window.skyx = {};
 window.skyx.loader = new ResourceLoader();
 window.require = window.skyx.loader.require;
 window.waitfor = window.skyx.loader.waitfor;
 
-function main() {
-    console.log("Everything is loaded");
+function core() {
+    console.log("Core features have loaded");
     ModifyAircraft();
     ModifyMultiplayer();
     FlatEarth();
+}
+
+function main() {
+    console.log("Everything is loaded");
+    InitOptions();
 }
 
 waitfor(
@@ -413,5 +455,11 @@ waitfor(
     "geofs",
     "geofs.aircraft"
 ).then(() => {
-    main();
-})
+    core();
+    require(
+        "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+    ).then(() => {
+        main();
+    })
+});
