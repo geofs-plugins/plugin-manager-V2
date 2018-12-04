@@ -168,7 +168,6 @@ function ModifyAircraft() {
                         }
                         // Hotfix!
                         for (var inst in d.instruments) if (d.instruments.hasOwnProperty(inst)) {
-                            console.log(inst, d.instruments[inst]);
                             if (d.instruments[inst].constructor.name === "Object" && !d.instruments[inst].position && inst === "pfd") {
                                 delete d.instruments[inst];
                             }
@@ -595,7 +594,8 @@ function ShowWelcome() {
     if (true) {
         new FullscreenModal(
             "star", "Welcome to SkyX 2.0!",
-            `Welcome aboard the new SkyX for GeoFS! We hope you're just excited as we are. Let us introduce you to some of our new features here...
+            `Welcome aboard the new SkyX for GeoFS! We hope you're just excited as we are.
+            <br/>Let us introduce you to some of our new features here...
             <br/><br/>Don't worry, we still don't have that many.`,
             `<div class="ui green ok inverted button">
             <i class="checkmark icon"></i>
@@ -615,7 +615,7 @@ function ShowWelcome() {
                 ui.panel.toggle(".geofs-aircraft-list");
                 new FullscreenModal(
                     "image", "Terrain Flattener",
-                    `Just like the old SkyX, SkyX 2.0 also has a flat terrain option. If a bumpy runway bothers you too much, simply press Ctrl+Y to toggle flat terrain.<br/><br/>
+                    `Just like the old SkyX,&nbsp;&nbsp; SkyX &nbsp;2.0&nbsp; also has a flat terrain option. If a bumpy runway bothers you too much, simply press Ctrl+Y to toggle flat terrain.<br/><br/>
                     Do not confuse with flat Earth, which we (like science) do not support.`,
                     `<div class="ui green ok inverted button">
                     <i class="checkmark icon"></i>
