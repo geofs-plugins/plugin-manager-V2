@@ -299,7 +299,6 @@ function ModifyMultiplayer() {
                 var c = $.merge($.merge([], a.llaLocation), a.htr);
                 if (c.join() != multiplayer.lastJoinedCoordinates) {
                     multiplayer.lastJoinedCoordinates = c.join();
-                    console.log(a.aircraftRecord);
                     var d = V3.scale(xyz2lla(a.rigidBody.getLinearVelocity(), a.llaLocation), .001)
                       , e = $.merge(d, a.htrAngularSpeed)
                       , f = {
@@ -373,6 +372,30 @@ function ModifyMultiplayer() {
     }
 }
 
+function FlatEarth() {
+    if (!window["control"]) {
+        window["control"] = true;
+        document.addEventListener("keydown", function(e) {
+            if (e.keyCode == 17 || e.keyCode == 87) {
+                window.ctrl = true;
+            }
+        });
+    }
+    document.addEventListener("keydown", function(e) {
+        if (!window["terrainc"]) {
+            window.tps = [geofs.api.viewer.terrainProvider, new Cesium.EllipsoidTerrainProvider()];
+            window.tpi = 0;
+            console.log("First terrain update");
+        }
+        window.terrainc = true;
+        window["tpi"] = window["tpi"] || 0;
+        if (e.keyCode == 89 && window.ctrl) {
+            geofs.api.viewer.terrainProvider = window.tps[++window.tpi % 2];
+            window.ctrl = false;
+        }
+    }, false);
+}
+
 window.skyx = {};
 window.skyx.loader = new ResourceLoader();
 window.require = window.skyx.loader.require;
@@ -382,6 +405,7 @@ function main() {
     console.log("Everything is loaded");
     ModifyAircraft();
     ModifyMultiplayer();
+    FlatEarth();
 }
 
 waitfor(
