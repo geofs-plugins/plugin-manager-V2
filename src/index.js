@@ -708,7 +708,29 @@ function InitOptions() {
 
     $("#voicechat-toggler").change(function() {
         if (this.checked) {
-            window.voice.connect();
+			if (localStorage.getItem("skyx_2_13_yrs") != "accepted") {
+				new FullscreenModal(
+					"hand paper", "Wait a minute!",
+					`Before enabling the voice chat, please confirm that you are at least 13 years old.<br/><br/>
+					Using the voice chat is not allowed for players under 13.`,
+					`<div class="ui red cancel inverted button">
+					<i class="checkmark icon"></i>
+					No, Take me back
+					</div>
+					<div class="ui green ok inverted button">
+					<i class="checkmark icon"></i>
+					I am at least 13 years old. Go ahead!
+					</div>`
+				).open(() => {
+					localStorage.setItem("skyx_2_13_yrs", "accepted");
+					window.voice.connect();
+				}, () => {
+					this.checked = false;
+				});
+			}
+			else {
+				window.voice.connect();
+			}
         }
         else {
             window.voice.disconnect();
@@ -717,7 +739,7 @@ function InitOptions() {
 }
 
 function ShowWelcome() {
-    const WELCOME_VERSION = "0.1"; // TODO: Write code to show welcome only once
+    const WELCOME_VERSION = "0.2"; // TODO: Write code to show welcome only once
 
     if (localStorage.getItem("skyx__welcome_version") == WELCOME_VERSION) {
         return;
@@ -756,29 +778,41 @@ function ShowWelcome() {
                     Cool!
                     </div>`
                 ).open(function() {
-                    new FullscreenModal(
-                        "facebook", "Do you like SkyX?",
-                        `If you enjoy your time with SkyX, please help us get to more people by posting in-game pictures, 
-                        videos, etc on your favourite social networks such as Facebook or Discord.<br/><br/>
-                        Are you ready to play?`,
-                        `<div class="ui green ok inverted button">
-                        <i class="checkmark icon"></i>
-                        I'm ready!
-                        </div>`
-                    ).open(function() {
-                        new FullscreenModal(
-                            "angellist", "Let's play",
-                            `Ok, we're ready to play. See you again soon!<br/><br/>SkyX Team.`,
-                            `<div class="ui blue ok inverted button">
-                            <i class="checkmark icon"></i>
-                            Finish Tutorial
-                            </div>`
-                        ).open(function() {
-                            alertify.notify("You have been equipped with a Lufthansa A380", "success", 5);
-                            geofs.aircraft.instance.change("skyx1007");
-                        });
-                    })
-                })
+					new FullscreenModal(
+						"microphone", "Voice ATC Channel",
+						`For utmost gameplay experience, we added a simple voice chat <b>in game,</b>! You can easily activate it from the Options tab.<br/><br/>
+						<span style="font-size: 0.7erm;">
+						Please notice that using the voice chat is not allowed under the age of 13. Enabling the voice chat on your own responsibility.<br/>
+						</span>`,
+						`<div class="ui green ok inverted button">
+						<i class="checkmark icon"></i>
+						Awesome :)
+						</div>`
+					).open(function() {
+						new FullscreenModal(
+							"facebook", "Do you like SkyX?",
+							`If you enjoy your time with SkyX, please help us get to more people by posting in-game pictures, 
+							videos, etc on your favourite social networks such as Facebook or Discord.<br/><br/>
+							Are you ready to play?`,
+							`<div class="ui green ok inverted button">
+							<i class="checkmark icon"></i>
+							I'm ready!
+							</div>`
+						).open(function() {
+							new FullscreenModal(
+								"angellist", "Let's play",
+								`Ok, we're ready to play. See you again soon!<br/><br/>SkyX Team.`,
+								`<div class="ui blue ok inverted button">
+								<i class="checkmark icon"></i>
+								Finish Tutorial
+								</div>`
+							).open(function() {
+								alertify.notify("You have been equipped with a Lufthansa A380", "success", 5);
+								geofs.aircraft.instance.change("skyx1007");
+							});
+						});
+					});
+				});
             });
         });
     }
