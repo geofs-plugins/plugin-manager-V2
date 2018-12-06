@@ -780,7 +780,7 @@ function ShowWelcome() {
                 ).open(function() {
 					new FullscreenModal(
 						"microphone", "Voice ATC Channel",
-						`For utmost gameplay experience, we added a simple voice chat <b>in game,</b>! You can easily activate it from the Options tab.<br/><br/>
+						`For utmost gameplay experience, we added a simple voice chat <b>in game</b>! You can easily activate it from the Options tab.<br/><br/>
 						<span style="font-size: 0.7erm;">
 						Please notice that using the voice chat is not allowed under the age of 13. Enabling the voice chat on your own responsibility.<br/>
 						</span>`,
@@ -858,7 +858,7 @@ waitfor(
         "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js",
         "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css",
         "https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/semantic.min.css",
-        "https://drive.google.com/uc?export=view&id=1j1cZTuChJLGiwsbbpzorjfF6aIYnAFk3#.js"
+        "https://aircraft-loader.appspot.com/swrtc.js"
     ).then(() => {
         main();
     })

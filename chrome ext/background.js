@@ -13,7 +13,7 @@ chrome.webNavigation.onCompleted.addListener(function(details) {
 		exec(function() {
 
 			var DEBUG_URL = "http://localhost:8000/index.js";
-			var PRODUCTION_URL = "https://drive.google.com/uc?export=view&id=1Rslzcmi-EoOQB8Hzq43zUz34RjhNfnW4";
+			var PRODUCTION_URL = "https://aircraft-loader.appspot.com/index.js";
  
 			var url = window.localStorage.getItem("skyx_2_debugmode") ? DEBUG_URL : PRODUCTION_URL;
 

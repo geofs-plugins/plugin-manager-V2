@@ -3,7 +3,7 @@
 
   "name": "SkyX 2.0 plugin for GeoFS",
   "description": "A plugin for the GeoFS flight simulator, adding more planes, features and buildings to the game.",
-  "version": "0.1.0",
+  "version": "2.0.1",
   "icons": {
 	  "32": "image/logo_32.png"
   },
