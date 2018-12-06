@@ -739,7 +739,7 @@ function InitOptions() {
 }
 
 function ShowWelcome() {
-    const WELCOME_VERSION = "0.2"; // TODO: Write code to show welcome only once
+    const WELCOME_VERSION = "2.0";
 
     if (localStorage.getItem("skyx__welcome_version") == WELCOME_VERSION) {
         return;
