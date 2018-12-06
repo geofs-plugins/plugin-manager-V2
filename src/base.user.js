@@ -38,12 +38,12 @@ var isDebug = true;
 
 		if (isDebug)
 		{
-			req.open("GET", "https://rawgit.com/geofs-plugins/plugin-manager-V2/dev/src/core.user.js", "true");
+			req.open("GET", "https://cdn.jsdelivr.net/gh/geofs-plugins/plugin-manager-V2@dev/src/core.user.js", "true");
 			req.send();
 		}
 		else
 		{
-			req.open("GET", "https://rawgit.com/geofs-plugins/plugin-manager-V2/release/src/core.user.js", "true");
+			req.open("GET", "https://cdn.jsdelivr.net/gh/geofs-plugins/plugin-manager-V2@release/src/core.user.js", "true");
 			req.send();
 		}
 	};
