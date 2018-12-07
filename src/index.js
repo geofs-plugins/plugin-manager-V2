@@ -421,10 +421,10 @@ const Aircraft = [
             {id: 332, name: "Qatar Airways", author: "Yotam Salmon"},
             {id: 328, name: "Emirates", author: "Yotam Salmon"},
             {id: 333, name: "Dubai One", author: "Coolstar"},
-            {id: 1002, name: "ANA", author: "Dylan Cleary"},
-            {id: 1005, name: "Etihad Airways", author: "Dylan Cleary"},
-            {id: 1006, name: "HiFly Coral Reefs Livery", author: "Dylan Cleary"},
-            {id: 1007, name: "Lufthansa", author: "Dylan Cleary"},
+            {id: 1002, name: "ANA", author: "Air-Geo Fs"},
+            {id: 1005, name: "Etihad Airways", author: "Air-Geo Fs"},
+            {id: 1006, name: "HiFly Coral Reefs Livery", author: "Air-Geo Fs"},
+            {id: 1007, name: "Lufthansa", author: "Air-Geo Fs"},
         ]
     },
 ];
